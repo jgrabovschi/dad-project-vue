@@ -1,11 +1,28 @@
 <script setup>
 import { RouterLink } from 'vue-router';
 import Game from './Game.vue'
+import { useAuthStore } from '@/stores/auth'
+import { provide, useTemplateRef } from 'vue'
+import GlobalAlertDialog from '@/components/common/GlobalAlertDialog.vue'
 
+const storeAuth = useAuthStore()
+
+const alertDialog = useTemplateRef('alert-dialog')
+provide('alertDialog', alertDialog)
+
+const logout = () => {
+  alertDialog.value.open(logoutConfirmed, 'Logout confirmation?', 'Cancel', `Yes, I want to log out`,
+       `Are you sure you want to log out? You can still access your account later with your credentials.`)
+}
+
+const logoutConfirmed = () => {
+    storeAuth.logout()
+}
 </script>
 
 <template>
 
+   <GlobalAlertDialog ref="alert-dialog"></GlobalAlertDialog>
     <nav class="fixed top-0 z-50 w-full bg-white border-b border-gray-200 dark:bg-gray-800 dark:border-gray-700">
       <div class="px-3 py-3 lg:px-5 lg:pl-3">
         <div class="flex items-center justify-between">
@@ -18,7 +35,7 @@ import Game from './Game.vue'
              </button>
             <img src="/src/assets/logo.png" class="h-8 me-3" alt="FlowBite Logo" />  
           </div>
-          <div class="flex items-center">
+          <div v-show="storeAuth.user" class="flex items-center">
               <div class="flex items-center ms-3">
                 <div>
                   <button type="button" class="flex text-sm bg-gray-800 rounded-full focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600" aria-expanded="false" data-dropdown-toggle="dropdown-user">
@@ -46,7 +63,7 @@ import Game from './Game.vue'
                       <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white" role="menuitem">Earnings</a>
                     </li>
                     <li>
-                      <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white" role="menuitem">Sign out</a>
+                      <a @click="logout" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white" role="menuitem">Sign out</a>
                     </li>
                   </ul>
                 </div>
@@ -103,7 +120,7 @@ import Game from './Game.vue'
                 </a>
              </li>  -->
              <li>
-                <RouterLink :to="{ name: 'login'}" class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
+                <RouterLink v-show="!storeAuth.user" :to="{ name: 'login'}" class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
                    <svg class="flex-shrink-0 w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 18 16">
                       <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 8h11m0 0L8 4m4 4-4 4m4-11h3a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2h-3"/>
                    </svg>
