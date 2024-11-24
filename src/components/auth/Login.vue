@@ -35,22 +35,22 @@ const login = () => {
 </script>
 
 <template>
-  <Card class="w-[450px] mx-auto my-8 p-4 px-8">
+  <Card class="w-[450px] mx-auto my-8 p-4 px-8 bg-white dark:bg-gray-800 border-0">
     <CardHeader>
-      <CardTitle>Login</CardTitle>
+      <CardTitle class="text-black dark:text-white">Login</CardTitle>
       <CardDescription>Enter your credentials to access your account.</CardDescription>
     </CardHeader>
     <CardContent>
       <form>
         <div class="grid items-center w-full gap-4">
           <div class="flex flex-col space-y-1.5">
-            <Label for="email">Email</Label>
-            <Input id="email" type="email" placeholder="User Email" v-model="credentials.email" />
+            <Label class="text-black dark:text-white" for="email">Email</Label>
+            <Input id="email" type="email" placeholder="User Email" v-model="credentials.email" class="dark:bg-slate-300" />
             <ErrorMessage :errorMessage="storeError.fieldMessage('email')"></ErrorMessage>
           </div>
           <div class="flex flex-col space-y-1.5">
-            <Label for="password">Password</Label>
-            <Input id="password" type="password" v-model="credentials.password" />
+            <Label class="text-black dark:text-white" for="password">Password</Label>
+            <Input id="password" type="password" v-model="credentials.password" class="dark:bg-slate-300" />
             <ErrorMessage :errorMessage="storeError.fieldMessage('password')"></ErrorMessage>
           </div>
         </div>

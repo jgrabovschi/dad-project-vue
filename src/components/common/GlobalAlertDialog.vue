@@ -41,10 +41,10 @@ defineExpose({
 
 <template>
   <AlertDialog v-model:open="isOpen">
-    <AlertDialogContent>
+    <AlertDialogContent class="dark:bg-slate-700 dark:border-0">
       <AlertDialogHeader>
-        <AlertDialogTitle>{{ titleText }}</AlertDialogTitle>
-        <AlertDialogDescription>{{ descriptionText }}           
+        <AlertDialogTitle class="dark:text-white">{{ titleText }}</AlertDialogTitle>
+        <AlertDialogDescription class="dark:text-slate-300">{{ descriptionText }}           
         </AlertDialogDescription>
       </AlertDialogHeader>
       <AlertDialogFooter>
