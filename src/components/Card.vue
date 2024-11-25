@@ -15,5 +15,5 @@
 
 </script>
 <template>
-    <img :src="card.flipped || card.matched? card.src : backOfCard" alt="card" @click="flip"/>
+    <img :src="card.flipped || card.matched? card.src : backOfCard" alt="card" @click="flip" />
 </template>
