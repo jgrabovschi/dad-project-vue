@@ -23,6 +23,10 @@ export const useAuthStore = defineStore('auth', () => {
         return (firstName + ' ' + lastName).trim()
     })
 
+    const gamesWon = computed(() => {
+        return user.value ? user.value.games_won : 0
+    })
+
     const userEmail = computed(() => {
         return user.value ? user.value.email : ''
     })
@@ -33,6 +37,10 @@ export const useAuthStore = defineStore('auth', () => {
 
     const userGender = computed(() => {
         return user.value ? user.value.gender : ''
+    })
+    
+    const nickname = computed(() => {   
+        return user.value ? user.value.nickname : ''
     })
 
     const userPhotoUrl = computed(() => {
@@ -142,7 +150,7 @@ export const useAuthStore = defineStore('auth', () => {
     }
 
     return {
-        user, userName, userFirstLastName, userEmail, userType, userGender, userPhotoUrl,
+        user, userName, userFirstLastName, userEmail, userType, userGender, userPhotoUrl, gamesWon, nickname,
         login, logout, restoreToken, canUpdateDeleteProject
     }
 })

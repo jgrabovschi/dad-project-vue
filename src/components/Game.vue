@@ -85,7 +85,7 @@ const flipCard = (card) => {
         <p class="text-black dark:text-white p-8 text-xl text-center" >Game</p>
         <div class="flex justify-center">
             <div v-for="cardsRow in cardsImages" class="md:w-auto justify-center p-0">
-                <div v-for="card in cardsRow" :key="card.id" class="bg-white w-10 overflow-auto sm:w-14 md:w-20 xl:w-32 aspect-[3/4] dark:bg-gray-700 rounded p-2 m-4 items-center">
+                <div v-for="card in cardsRow" :key="card.id" class="bg-white w-10 sm:w-14 md:w-20 xl:w-32 aspect-[3/4] dark:bg-gray-700 rounded p-2 m-4 items-center">
                     <Card :card="card" @flip="flipCard"/>
                 </div>
             </div>
