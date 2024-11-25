@@ -46,10 +46,10 @@ socket.on('echo', (message) => {
     
                 <div v-if="responseData" class="space-y-2 mt-8">
                     <div class="flex justify-between items-center mb-2">
-                        <label for="response" class="block text-sm font-medium text-gray-700">
+                        <label for="response" class="block text-sm font-medium text-gray-700 dark:text-white">
                             Response
                         </label>
-                        <span class="text-xs text-gray-500">Real-time updates</span>
+                        <span class="text-xs text-gray-500 dark:text-white">Real-time updates</span>
                     </div>
                     <textarea :value="responseData" id="response" rows="5"
                         class="mt-1 block w-full px-3 py-2 bg-gray-50 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm font-mono"

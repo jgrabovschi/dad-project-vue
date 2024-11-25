@@ -34,9 +34,25 @@ const logoutConfirmed = () => {
                    <path clip-rule="evenodd" fill-rule="evenodd" d="M2 4.75A.75.75 0 012.75 4h14.5a.75.75 0 010 1.5H2.75A.75.75 0 012 4.75zm0 10.5a.75.75 0 01.75-.75h7.5a.75.75 0 010 1.5h-7.5a.75.75 0 01-.75-.75zM2 10a.75.75 0 01.75-.75h14.5a.75.75 0 010 1.5H2.75A.75.75 0 012 10z"></path>
                 </svg>
              </button>
-            <img src="/src/assets/logo.png" class="h-8 me-3" alt="FlowBite Logo" />  
+             <RouterLink :to="{ name: 'home' }" class="flex items-center text-lg font-bold text-gray-900 dark:text-white">
+               <img src="/src/assets/logo.png" class="h-8 me-3" alt="FlowBite Logo" /> 
+            </RouterLink> 
           </div>
           <div v-show="storeAuth.user" class="flex items-center">
+            <div>
+               <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-brain text-pink-400">
+                  <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                  <path d="M15.5 13a3.5 3.5 0 0 0 -3.5 3.5v1a3.5 3.5 0 0 0 7 0v-1.8" />
+                  <path d="M8.5 13a3.5 3.5 0 0 1 3.5 3.5v1a3.5 3.5 0 0 1 -7 0v-1.8" />
+                  <path d="M17.5 16a3.5 3.5 0 0 0 0 -7h-.5" />
+                  <path d="M19 9.3v-2.8a3.5 3.5 0 0 0 -7 0" />
+                  <path d="M6.5 16a3.5 3.5 0 0 1 0 -7h.5" />
+                  <path d="M5 9.3v-2.8a3.5 3.5 0 0 1 7 0v10" />
+               </svg>
+            </div>
+            <div class="dark:text-white">
+               {{ storeAuth.balance }}
+            </div>
               <div class="flex items-center ms-3">
                 <div>
                   <button type="button" class="flex text-sm bg-gray-800 rounded-full focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600" aria-expanded="false" data-dropdown-toggle="dropdown-user">

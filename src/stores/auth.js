@@ -43,6 +43,10 @@ export const useAuthStore = defineStore('auth', () => {
         return user.value ? user.value.nickname : ''
     })
 
+    const balance = computed(() => {
+        return user.value ? user.value.brain_coins_balance : 0
+    })
+
     const userPhotoUrl = computed(() => {
         const photoFile = user.value ? user.value.photo_filename ?? '' : ''
         if (photoFile) {
@@ -58,6 +62,7 @@ export const useAuthStore = defineStore('auth', () => {
         token.value = ''
         localStorage.removeItem('token')
         axios.defaults.headers.common.Authorization = ''
+        router.push({ name: 'login' })
     }
 
     const login = async (credentials) => {
@@ -150,7 +155,7 @@ export const useAuthStore = defineStore('auth', () => {
     }
 
     return {
-        user, userName, userFirstLastName, userEmail, userType, userGender, userPhotoUrl, gamesWon, nickname,
+        user, userName, userFirstLastName, userEmail, userType, userGender, userPhotoUrl, gamesWon, nickname, balance,
         login, logout, restoreToken, canUpdateDeleteProject
     }
 })

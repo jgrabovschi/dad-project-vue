@@ -4,6 +4,7 @@ import { useAuthStore } from '@/stores/auth'
 import Game from '@/components/Game.vue'
 import WebSocket from '@/components/WebSocketTester.vue'
 import Profile from '@/components/Profile.vue'
+import Home from '@/components/Home.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -11,6 +12,7 @@ const router = createRouter({
     {
       path: '/',
       name: 'home',
+      component: Home,
     },
     {
       path: '/login',
@@ -42,6 +44,11 @@ router.beforeEach(async (to, from, next) => {
     if (handlingFirstRoute) {
         handlingFirstRoute = false
         await storeAuth.restoreToken()
+    }
+
+    if (to.name == "myprofile" && (!storeAuth.user)) {
+      next({ name: 'login' })
+      return
     }
     // // routes "updateTask" and "updateProject" are only accessible when user is logged in
     // if (((to.name == 'updateTask') || (to.name == 'updateProject')) && (!storeAuth.user)) {
