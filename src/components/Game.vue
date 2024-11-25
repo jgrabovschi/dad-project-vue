@@ -80,12 +80,12 @@ const flipCard = (card) => {
 </script>
 
 <template>
-  <div class="rounded-lg bg-white dark:bg-gray-800 h-5/6 w-5/6 mt-14">
+  <div class="rounded-lg bg-white dark:bg-gray-800 h-fit w-fit mt-14">
     <div>
         <p class="text-black dark:text-white p-8 text-xl text-center" >Game</p>
-        <div class="flex justify-center ">
-            <div v-for="cardsRow in cardsImages" class="p-8 ">
-                <div v-for="card in cardsRow" :key="card.id" class="bg-white w-1/2 h-auto aspect-[3/4] dark:bg-gray-700 rounded p-4 m-4 items-center">
+        <div class="flex justify-center">
+            <div v-for="cardsRow in cardsImages" class="md:w-auto justify-center p-0">
+                <div v-for="card in cardsRow" :key="card.id" class="bg-white w-10 overflow-auto sm:w-14 md:w-20 xl:w-32 aspect-[3/4] dark:bg-gray-700 rounded p-2 m-4 items-center">
                     <Card :card="card" @flip="flipCard"/>
                 </div>
             </div>
