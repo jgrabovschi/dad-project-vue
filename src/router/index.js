@@ -6,6 +6,7 @@ import Transactions from '@/components/Transactions.vue'
 import WebSocket from '@/components/WebSocketTester.vue'
 import Profile from '@/components/Profile.vue'
 import Home from '@/components/Home.vue'
+import GameHistory from '@/components/GameHistory.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -39,6 +40,10 @@ const router = createRouter({
       path: '/transactions',
       name: 'transactions',
       component: Transactions
+    },{
+      path: '/history',
+      name: 'history',
+      component: GameHistory,
     }
   ],
 })
