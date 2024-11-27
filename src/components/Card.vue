@@ -5,7 +5,7 @@
 
     const emits = defineEmits(['flip'])
 
-    const backOfCard = '/src/assets/semFace.png'
+    const backOfCard = '/cards/semFace.png'
 
     const flip = () => {
         props.card.flipped = !props.card.flipped

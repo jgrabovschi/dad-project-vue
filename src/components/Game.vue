@@ -49,7 +49,7 @@ for (var i = 0; i < size ; i++) {
     cardsImages.value.push({
         id: i,
         pair_id: pairs[i],
-        src: `/src/assets/${pairs[i]}.png`,
+        src: `/cards/${pairs[i]}.png`,
         flipped: false,
         matched: false
     })
