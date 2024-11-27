@@ -5,6 +5,7 @@ import Game from '@/components/Game.vue'
 import WebSocket from '@/components/WebSocketTester.vue'
 import Profile from '@/components/Profile.vue'
 import Home from '@/components/Home.vue'
+import GameHistory from '@/components/GameHistory.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -33,6 +34,11 @@ const router = createRouter({
       path: '/me',
       name: 'myprofile',
       component: Profile,
+    },
+    {
+      path: '/history',
+      name: 'history',
+      component: GameHistory,
     }
   ],
 })
