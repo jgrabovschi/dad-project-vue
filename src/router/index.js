@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 import Login from '@/components/auth/Login.vue'
 import { useAuthStore } from '@/stores/auth'
 import Game from '@/components/Game.vue'
+import Transactions from '@/components/Transactions.vue'
 import WebSocket from '@/components/WebSocketTester.vue'
 import Profile from '@/components/Profile.vue'
 import Home from '@/components/Home.vue'
@@ -33,6 +34,11 @@ const router = createRouter({
       path: '/me',
       name: 'myprofile',
       component: Profile,
+    },
+    {
+      path: '/transactions',
+      name: 'transactions',
+      component: Transactions
     }
   ],
 })
