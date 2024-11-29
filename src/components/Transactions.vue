@@ -25,7 +25,7 @@ const authStore = useAuthStore()
             <TableBody>
                 <TableRow className="h-12">
                 <TableCell className="font-medium text-center">INV001</TableCell>
-                <TableCell v-if="authStore.userType == 'A'" className="w-28">User</TableCell>
+                <TableCell v-if="authStore.userType == 'A'" className="w-28 text-center">User</TableCell>
                 <TableCell className="text-center">Paid</TableCell>
                 <TableCell className="text-center">Credit Card</TableCell>
                 <TableCell className="text-center">$250.00</TableCell>

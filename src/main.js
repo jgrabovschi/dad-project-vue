@@ -2,9 +2,7 @@ import { createApp } from 'vue'
 import { createPinia } from 'pinia'
 import axios from 'axios'
 import { io } from 'socket.io-client'
-
 import '@/assets/main.css'
-
 import App from './App.vue'
 import router from './router'
 
@@ -20,8 +18,9 @@ console.log('api domain', apiDomain)
 console.log('ws connection', wsConnection)
 
 axios.defaults.baseURL = `http://${apiDomain}/api`
+axios.defaults.withCredentials = true
 
-app.provide('socket', io(wsConnection))
+//app.provide('socket', io(wsConnection))
 
 app.provide('serverBaseUrl', apiDomain)
 
