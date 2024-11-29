@@ -288,7 +288,7 @@ export const useAuthStore = defineStore('auth', () => {
                 payload.password = credentials.password
             }
 
-            console.log(payload);
+            //console.log(payload);
 
         
             try {

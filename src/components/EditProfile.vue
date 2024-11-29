@@ -14,7 +14,10 @@ import {
 } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
+import { inject } from 'vue'
 
+
+const alertDialog = inject('alertDialog')
 const router = useRouter()
 const storeAuth = useAuthStore()
 const storeError = useErrorStore()
@@ -46,7 +49,15 @@ const onFileChange = (event) => {
 }
 
 const updateProfile = () => {
-    storeAuth.updateProfile(credentials.value)
+  alertDialog.value.open(
+  updateConfirmed,
+'Are you sure?', 'Cancel', `Yes, update my profile`,
+ `This action cannot be undone. This will permanently update your profile.`
+  )
+}
+
+const updateConfirmed = () => {
+  storeAuth.updateProfile(credentials.value)
 }
 
 </script>
@@ -71,7 +82,7 @@ const updateProfile = () => {
           </div>
           <div class="flex flex-col space-y-1.5">
             <Label class="text-black dark:text-white" for="email">Update your password</Label>
-            <Input id="password" type="text" placeholder="New password" v-model="credentials.password" class="dark:bg-slate-300" />
+            <Input id="password" type="password" placeholder="New password" v-model="credentials.password" class="dark:bg-slate-300" />
             <ErrorMessage :errorMessage="storeError.fieldMessage('password')"></ErrorMessage>
           </div>
           <div class="flex flex-col space-y-1.5">
