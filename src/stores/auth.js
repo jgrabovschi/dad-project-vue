@@ -168,6 +168,7 @@ export const useAuthStore = defineStore('auth', () => {
         }
     }*/
 
+        /*
         const signup = async (credentials) => {
             const formData = new FormData()
             formData.append('email', credentials.email)
@@ -194,8 +195,36 @@ export const useAuthStore = defineStore('auth', () => {
                 }
                 return false
             }
+        }*/
+
+        const signup = async (credentials) => {
+            const payload = {
+                email: credentials.email,
+                password: credentials.password,
+                name: credentials.name,
+                nickname: credentials.nickname,
+                photo_filename: credentials.photo_filename // Base64 encoded image
+            }
+        
+            try {
+                const response = await axios.post('/users', payload, {
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                })
+                router.push({ name: 'login' })
+                return response.data
+            } catch (e) {
+                if (e.response) {
+                    storeError.setErrorMessages(e.response.data.message, e.response.data.errors, e.response.status, 'Signup Error!')
+                } else {
+                    storeError.setErrorMessages('An unexpected error occurred.')
+                }
+                return false
+            }
         }
 
+        /*
         const updateProfile = async (credentials) => {
             //laravel nao aceira metodo put diretamente com o formData: problema ao dar update na info do user,isto nao atualiza logo tem de se dar reload a app
 
@@ -232,6 +261,53 @@ export const useAuthStore = defineStore('auth', () => {
             } catch (e) {
                 if (e.response) {
                     storeError.setErrorMessages(e.response.data.message, e.response.data.errors, e.response.status, 'Signup Error!')
+                } else {
+                    storeError.setErrorMessages('An unexpected error occurred.')
+                }
+                return false
+            }
+        }*/
+
+        const updateProfile = async (credentials) => {
+            const payload = {}
+
+            // Conditionally add fields to the payload
+            if (credentials.email) {
+                payload.email = credentials.email
+            }
+            if (credentials.name) {
+                payload.name = credentials.name
+            }
+            if (credentials.nickname) {
+                payload.nickname = credentials.nickname
+            }
+            if (credentials.photo_filename) {
+                payload.photo_filename = credentials.photo_filename // Base64 encoded image
+            }
+            if (credentials.password) {
+                payload.password = credentials.password
+            }
+
+            console.log(payload);
+
+        
+            try {
+                const response = await axios.put(`/users/${user.value.id}`, payload, {
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                })
+
+                console.log(response.data);
+                await getUserDataAfterUpdate();
+        
+                router.push({ name: 'myprofile' });
+                
+                return response.data
+            } catch (e) {
+                console.log(e);
+                if (e.response) {
+                    storeError.setErrorMessages(e.response.data.message, e.response.data.errors, e.response.status, 'Update Profile Error!')
                 } else {
                     storeError.setErrorMessages('An unexpected error occurred.')
                 }

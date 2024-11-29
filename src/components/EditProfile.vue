@@ -27,9 +27,22 @@ const credentials = ref({
     photo_filename: null
 })
 
+const previewUrl = ref(null) // Ref to store the preview URL
+
 const onFileChange = (event) => {
     const file = event.target.files[0]
-    credentials.value.photo_filename = file
+    if (file && file.type.startsWith('image/')) {
+        const reader = new FileReader()
+        reader.onload = () => {
+            credentials.value.photo_filename = reader.result
+            previewUrl.value = reader.result // Set the preview URL
+        }
+        reader.readAsDataURL(file)
+    } else {
+        storeError.setErrorMessages('The selected file must be an image.')
+        credentials.value.photo_filename = null
+        previewUrl.value = null // Clear the preview URL
+    }
 }
 
 const updateProfile = () => {
@@ -65,11 +78,15 @@ const updateProfile = () => {
             <Label class="text-black dark:text-white" for="photo_filename">Update your photo or avatar</Label>
             <Input id="photo_filename" type="file" @change="onFileChange" class="dark:bg-slate-300 cursor-pointer" />
             <ErrorMessage :errorMessage="storeError.fieldMessage('photo_filename')"></ErrorMessage>
+            <div v-if="previewUrl" class="mt-4 text-center">
+              <Label class="text-black dark:text-white">Image Preview</Label>
+              <img :src="previewUrl" alt="Image Preview" class="w-24 h-24 rounded-full mx-auto" />
+            </div>
           </div>
         </div>
         <br>
         <div class="flex justify-end space-x-4">
-          <Button @click.prevent="updateProfile" class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition">
+          <Button @click.prevent="updateProfile" class="px-4 py-2 bg-green-600 text-white rounded hover:bg-blue-700 transition">
             Update Profile
           </Button>
         </div>

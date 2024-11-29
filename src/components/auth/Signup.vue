@@ -19,6 +19,7 @@ import { Label } from '@/components/ui/label'
 const router = useRouter()
 const storeAuth = useAuthStore()
 const storeError = useErrorStore()
+const previewUrl = ref(null) // Ref to store the preview URL
 
 const credentials = ref({
     email: '',
@@ -27,10 +28,26 @@ const credentials = ref({
     nickname: '',
     photo_filename: null
 })
-
+/*
 const onFileChange = (event) => {
     const file = event.target.files[0]
     credentials.value.photo_filename = file
+}*/
+
+const onFileChange = (event) => {
+    const file = event.target.files[0]
+    if (file && file.type.startsWith('image/')) {
+        const reader = new FileReader()
+        reader.onload = () => {
+            credentials.value.photo_filename = reader.result
+            previewUrl.value = reader.result // Set the preview URL
+        }
+        reader.readAsDataURL(file)
+    } else {
+        storeError.setErrorMessages('The selected file must be an image.')
+        credentials.value.photo_filename = null
+        previewUrl.value = null // Clear the preview URL
+    }
 }
 
 const cancel = () => {
@@ -45,7 +62,7 @@ const signup = () => {
 <template>
   <Card class="w-[450px] mx-auto my-8 p-4 px-8 bg-white dark:bg-gray-800 border-0">
     <CardHeader>
-      <CardTitle class="text-black dark:text-white">Signup</CardTitle>
+      <CardTitle class="text-black dark:text-white">Sign up</CardTitle>
       <CardDescription>Enter your information to create your account</CardDescription>
     </CardHeader>
     <CardContent>
@@ -75,12 +92,16 @@ const signup = () => {
             <Label class="text-black dark:text-white" for="photo_filename">Insert your photo or avatar</Label>
             <Input id="photo_filename" type="file" @change="onFileChange" class="dark:bg-slate-300 cursor-pointer" />
             <ErrorMessage :errorMessage="storeError.fieldMessage('photo_filename')"></ErrorMessage>
+            <div v-if="previewUrl" class="mt-4 text-center">
+              <Label class="text-black dark:text-white">Image Preview</Label>
+              <img :src="previewUrl" alt="Image Preview" class="w-24 h-24 rounded-full mx-auto" />
+            </div>
           </div>
         </div>
         <br>
         <div class="flex justify-end space-x-4">
           <Button @click.prevent="cancel">Cancel</Button>
-          <Button @click.prevent="signup">Sign Up</Button>
+          <Button class="bg-green-600 text-white rounded hover:bg-blue-700 transition" @click.prevent="signup">Sign Up</Button>
         </div>
       </form>
     </CardContent>
