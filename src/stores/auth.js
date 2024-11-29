@@ -5,6 +5,8 @@ import { useErrorStore } from '@/stores/error'
 import { useRouter } from 'vue-router'
 import avatarNoneAssetURL from '@/assets/avatar_none.jpg'
 
+
+
 export const useAuthStore = defineStore('auth', () => {
     const router = useRouter()
     const storeError = useErrorStore()
@@ -154,8 +156,105 @@ export const useAuthStore = defineStore('auth', () => {
         return project && user.value && (userType.value === 'A' || user.value.id === project.created_by_id)
     }
 
+    /*const signup = async (credentials) => {
+        storeError.resetMessages()
+        try {
+            const response = await axios.post('/users', credentials)
+            router.push({ name:'login' })
+            return response.data
+        } catch (e) {
+            storeError.setErrorMessages(e.response.data.message, e.response.data.errors, e.response.status, 'Signup Error!')
+            return false
+        }
+    }*/
+
+        const signup = async (credentials) => {
+            const formData = new FormData()
+            formData.append('email', credentials.email)
+            formData.append('password', credentials.password)
+            formData.append('name', credentials.name)
+            formData.append('nickname', credentials.nickname)
+            if (credentials.photo_filename) {
+                formData.append('photo_filename', credentials.photo_filename)
+            }
+        
+            try {
+                const response = await axios.post('/users', formData, {
+                    headers: {
+                        'Content-Type': 'multipart/form-data'
+                    }
+                })
+                router.push({ name: 'login' })
+                return response.data
+            } catch (e) {
+                if (e.response) {
+                    storeError.setErrorMessages(e.response.data.message, e.response.data.errors, e.response.status, 'Signup Error!')
+                } else {
+                    storeError.setErrorMessages('An unexpected error occurred.')
+                }
+                return false
+            }
+        }
+
+        const updateProfile = async (credentials) => {
+            //laravel nao aceira metodo put diretamente com o formData: problema ao dar update na info do user,isto nao atualiza logo tem de se dar reload a app
+
+            const formData = new FormData()
+            formData.append('_method', 'PUT')
+            if (credentials.email) {
+                formData.append('email', credentials.email)
+            }
+            if (credentials.name) {
+                formData.append('name', credentials.name)
+            }
+            if (credentials.nickname) {
+                formData.append('nickname', credentials.nickname)
+            }
+            if (credentials.password) {
+                formData.append('password', credentials.password)
+            }
+            if (credentials.photo_filename) {
+                formData.append('photo_filename', credentials.photo_filename)
+            }
+            
+            try {
+                const response = await axios.post(`/users/${user.value.id}`, formData, {
+                    headers: {
+                        'Content-Type': 'multipart/form-data',
+                    }
+                })
+
+                await getUserDataAfterUpdate();
+                
+                router.push({ name: 'game' })
+
+                return response.data
+            } catch (e) {
+                if (e.response) {
+                    storeError.setErrorMessages(e.response.data.message, e.response.data.errors, e.response.status, 'Signup Error!')
+                } else {
+                    storeError.setErrorMessages('An unexpected error occurred.')
+                }
+                return false
+            }
+        }
+
+        const getUserDataAfterUpdate = async () => {
+            try {
+                const response = await axios.get('users/me')
+                user.value = response.data.data
+                return user.value
+            } catch (e) {
+                clearUser()
+                storeError.setErrorMessages(e.response.data.message, e.response.data.errors, e.response.status, 'Authentication Error!')
+                return false
+            
+            }
+        }
+    
+
     return {
         user, userName, userFirstLastName, userEmail, userType, userGender, userPhotoUrl, gamesWon, nickname, balance,
-        login, logout, restoreToken, canUpdateDeleteProject
+        login, logout, restoreToken, canUpdateDeleteProject, signup, updateProfile
     }
 })

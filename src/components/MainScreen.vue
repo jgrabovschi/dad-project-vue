@@ -136,10 +136,10 @@ const logoutConfirmed = () => {
                 </RouterLink>
              </li>
              <li>
-                <a href="#" v-show="!storeAuth.user" class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
+                <RouterLink v-show="!storeAuth.user" :to="{name: 'signup'}" class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
                   <svg class="text-black fill-current dark:text-white" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e8eaed"><path d="M720-400v-120H600v-80h120v-120h80v120h120v80H800v120h-80Zm-360-80q-66 0-113-47t-47-113q0-66 47-113t113-47q66 0 113 47t47 113q0 66-47 113t-113 47ZM40-160v-112q0-34 17.5-62.5T104-378q62-31 126-46.5T360-440q66 0 130 15.5T616-378q29 15 46.5 43.5T680-272v112H40Z"/></svg>
                      <span class="flex-1 ms-3 whitespace-nowrap">Sign Up</span>
-                  </a>
+                </RouterLink>
                </li>
                <li>
                   <RouterLink v-if="storeAuth.user" :to="{ name: 'myprofile' }" class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
