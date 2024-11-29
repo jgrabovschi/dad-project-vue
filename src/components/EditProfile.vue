@@ -2,7 +2,8 @@
 import { computed, ref } from 'vue'
 import Card from './ui/card/Card.vue'
 import { useAuthStore } from '@/stores/auth'
-import { RouterLink } from 'vue-router';
+import { RouterLink } from 'vue-router'
+
 
 const storeAuth = useAuthStore()
 
@@ -25,10 +26,6 @@ const storeAuth = useAuthStore()
             <p class="text-sm text-gray-600 dark:text-white"><b>Games Won: </b>{{ storeAuth.gamesWon }}</p>
             <p class="text-sm text-gray-600 dark:text-white"><b>User Type: </b>{{ storeAuth.userType == 'A' ? 'Admin' : 'Player' }}</p>
         </div>
-        <div class="mt-6 text-center">
-        <RouterLink :to="{ name: 'editprofile' }" class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition">
-            Edit Profile
-        </RouterLink>
-        </div>
+        
     </Card>
 </template>
