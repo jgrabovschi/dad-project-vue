@@ -8,8 +8,7 @@
     const backOfCard = '/cards/semFace.png'
 
     const flip = () => {
-        props.card.flipped = !props.card.flipped
-        if (props.card.matched || !props.card.flipped) return
+        
         emits('flip', props.card)
     }
 
