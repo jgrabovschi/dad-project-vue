@@ -138,7 +138,7 @@ watch(gameWon, (newValue, oldValue) => {
               <div 
                   v-for="cardsRow in cardsImages" 
                   :key="cardsRow[0]?.id" 
-                  class="flex-col gap-2"
+                  class="flex-col gap-2 "
               >
                   <!-- Iterate over cards in a row -->
                   <div 

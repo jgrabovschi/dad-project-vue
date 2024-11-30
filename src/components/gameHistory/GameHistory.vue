@@ -1,12 +1,14 @@
 <script setup>
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
-import { Table, TableCaption, TableHeader, TableRow, TableHead, TableBody, TableCell } from '@/components/ui/table'
+import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from '@/components/ui/table'
 import { Pagination, PaginationList, PaginationFirst, PaginationPrev, PaginationListItem, PaginationEllipsis, PaginationNext, PaginationLast } from '@/components/ui/pagination'
 import { useGamesStore } from '@/stores/games';
+import GameHistoryFormFilter from './GameHistoryFormFilter.vue'
 
 const gamesStore = useGamesStore()
 gamesStore.loadGames()
+
 </script>
 
 <template>
@@ -17,16 +19,18 @@ gamesStore.loadGames()
         <CardDescription class="text-sm md:text-base">Use the filters and click on each game to see the scoreboards.</CardDescription>
       </CardHeader>
       <CardContent>
+        <GameHistoryFormFilter class="p-4" />
         <div class="overflow-x-auto">
           <Table class="min-w-full">
             <TableHeader>
               <TableRow>
                 <TableHead class="w-[150px] md:w-[200px] dark:text-white text-xs md:text-sm">Date</TableHead>
                 <TableHead class="dark:text-white text-xs md:text-sm">Status</TableHead>
-                <TableHead class="dark:text-white text-xs md:text-sm">Type</TableHead>
-                <TableHead class="dark:text-white text-xs md:text-sm">Winner</TableHead>
+                <TableHead v-if="gamesStore.typeFilter == 'multiplayer'" class="dark:text-white text-xs md:text-sm">Creator</TableHead>
+                <TableHead v-if="gamesStore.typeFilter == 'multiplayer'" class="dark:text-white text-xs md:text-sm">Winner</TableHead>
                 <TableHead class="dark:text-white text-xs md:text-sm">Board</TableHead>
                 <TableHead class="dark:text-white text-xs md:text-sm">Total Time</TableHead>
+                <TableHead class="dark:text-white text-xs md:text-sm">Total Moves</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -37,17 +41,20 @@ gamesStore.loadGames()
                 <TableCell class="dark:text-slate-300 text-xs md:text-sm">
                   {{ game.status == 'E' ? 'Ended' : game.status == 'PE' ? 'Pending' : game.status == 'I' ? 'Interrupted' : 'In Progress' }}
                 </TableCell>
-                <TableCell class="dark:text-slate-300 text-xs md:text-sm">
-                  {{ game.type == 'S' ? 'Single Player' : 'Multi Player' }}
+                <TableCell v-if="game.type == 'M'" class="dark:text-slate-300 text-xs md:text-sm">
+                  {{ game.created ?? 'No Creator'}}
+                </TableCell>
+                <TableCell v-if="game.type == 'M'" class="dark:text-slate-300 text-xs md:text-sm">
+                  {{ game.winner ?? 'No Winner'}}
                 </TableCell>
                 <TableCell class="dark:text-slate-300 text-xs md:text-sm">
-                  {{ game.winner_user_id?.name ?? 'No Winner'}}
-                </TableCell>
-                <TableCell class="dark:text-slate-300 text-xs md:text-sm">
-                  {{ game.board_id.board_rows + 'x' + game.board_id.board_cols }}
+                  {{ game.board_id.board_cols + 'x' + game.board_id.board_rows }}
                 </TableCell>
                 <TableCell class="dark:text-slate-300 text-xs md:text-sm">
                   {{ game.total_time ? game.total_time + ' seconds' : 'No Time' }}
+                </TableCell>
+                <TableCell class="dark:text-slate-300 text-xs md:text-sm">
+                  {{ game.total_turns_winner ? game.total_turns_winner : 'No Moves' }}
                 </TableCell>
               </TableRow>
             </TableBody>
@@ -55,7 +62,7 @@ gamesStore.loadGames()
         </div>
         <br>
         <Pagination
-          v-slot="{ page }"
+          :v-slot="gamesStore.currentPage"
           :total="gamesStore.totalItems"
           :sibling-count="2"
           show-edges
@@ -75,7 +82,7 @@ gamesStore.loadGames()
                 <Button
                   @click="gamesStore.toPage(item.value)"
                   class="w-8 h-8 md:w-10 md:h-10 p-0"
-                  :variant="item.value == page ? 'default' : 'outline'"
+                  :variant="gamesStore.currentPage == item.value ? 'default' : 'outline'"
                 >
                   {{ item.value }}
                 </Button>

@@ -6,7 +6,7 @@ import Transactions from '@/components/Transactions.vue'
 import WebSocket from '@/components/WebSocketTester.vue'
 import Profile from '@/components/Profile.vue'
 import Home from '@/components/Home.vue'
-import GameHistory from '@/components/GameHistory.vue'
+import GameHistory from '@/components/gameHistory/GameHistory.vue'
 import Signup from '@/components/auth/Signup.vue'
 import EditProfile from '@/components/EditProfile.vue'
 

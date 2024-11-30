@@ -41,7 +41,7 @@ const login = () => {
       <CardDescription>Enter your credentials to access your account.</CardDescription>
     </CardHeader>
     <CardContent>
-      <form>
+      <form @keydown.enter="login">
         <div class="grid items-center w-full gap-4">
           <div class="flex flex-col space-y-1.5">
             <Label class="text-black dark:text-white" for="email">Email</Label>
