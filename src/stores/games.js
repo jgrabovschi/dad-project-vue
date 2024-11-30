@@ -10,11 +10,17 @@ export const useGamesStore = defineStore('games', () => {
     const currentPage = ref(1)
     const totalItems = ref(0)
     const typeFilter = ref('singleplayer')
+    const isLoading = ref(false)
 
     const loadGames = async () => {
         storeError.resetMessages()
+        isLoading.value = true
         try {
             const response = await axios.get('/games' + (typeFilter.value == 'singleplayer' ? '' : '/multiplayer') + '?page=' + currentPage.value)
+            .then((response) => {
+                isLoading.value = false
+                return response
+            })
             games.value = response.data.data
             pages.value = response.data.meta.last_page
             currentPage.value = response.data.meta.current_page
@@ -48,5 +54,5 @@ export const useGamesStore = defineStore('games', () => {
         loadGames()
     }
 
-  return { loadGames, games, pages, currentPage, totalItems, typeFilter , nextPage, previousPage, toPage}
+  return { loadGames, games, pages, currentPage, totalItems, typeFilter , isLoading , nextPage, previousPage, toPage}
 })
