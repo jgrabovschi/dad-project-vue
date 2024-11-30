@@ -33,9 +33,7 @@ const startGame = (board) =>{
     //router.push({ name: 'game', params: { username: 'erina' } })
     if(storeAuth.user == null){
         router.push({ name: 'game'})
-    }
-    
-    if(singlePlayerChosen.value){
+    } else if(singlePlayerChosen.value){
         /*
         'created_user_id' => 'required|integer|exists:users,id',
         'type' => 'required|string|in:S,M',
