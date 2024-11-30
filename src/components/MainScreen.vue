@@ -151,7 +151,7 @@ const logoutConfirmed = () => {
           </ul>
        </div>
     </aside>
-    <div class="p-4 lg:ml-64 bg-slate-200 dark:bg-slate-500 h-screen flex justify-center items-center">
+    <div class="pt-20 lg:ml-64 p-4 bg-slate-200 dark:bg-slate-500 h-screen overflow-y-auto">
        
          
       <!-- <Game /> -->

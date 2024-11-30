@@ -5,7 +5,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 </script>
 
 <template>
-  <Card class="w-[450px] mx-auto my-8 p-4 px-8 bg-white dark:bg-gray-800 border-0">
+  <Card class="w-1/3 mx-auto my-8 p-4 px-8 bg-white dark:bg-gray-800 border-0 flex justify-center items-center">
     <CardHeader>
       <CardTitle class="text-black dark:text-white">Memory Card Game</CardTitle>
       <CardDescription>The best memory card game ever!</CardDescription>
