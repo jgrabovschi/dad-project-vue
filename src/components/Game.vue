@@ -3,6 +3,7 @@ import { ref, computed, watch } from 'vue'
 import Card from './Card.vue'
 import { inject } from 'vue' 
 import { useRouter } from 'vue-router'
+import { Card as CardComponent } from '@/components/ui/card'
 
 const router = useRouter()
 
@@ -128,16 +129,33 @@ watch(gameWon, (newValue, oldValue) => {
 </script>
 
 <template>
-  <div class="rounded-lg bg-white dark:bg-gray-800 h-fit w-fit mt-14">
-    <div>
-        <p class="text-black dark:text-white p-8 text-xl text-center" >Game</p>
-        <div class="flex justify-center">
-            <div v-for="cardsRow in cardsImages" class="md:w-auto justify-center p-0">
-                <div v-for="card in cardsRow" :key="card.id" class="bg-white w-10 sm:w-14 md:w-20 xl:w-32 aspect-[3/4] dark:bg-gray-700 rounded p-2 m-4 items-center">
-                    <Card v-if="!card.matched" :card="card" @flip="flipCard" :turn="isMyTurn"/>
-                </div>
-            </div>
-        </div>
-    </div>
+  <div class="flex justify-center items-center p-4">
+    <CardComponent class="max-w-6xl h-auto rounded-lg bg-white dark:bg-gray-800 border-0 shadow-md p-4">
+      <div class="text-center">
+          <p class="text-black dark:text-white mb-4 text-xl">Game</p>
+          <div class="flex items-center gap-2">
+              <!-- Iterate over rows -->
+              <div 
+                  v-for="cardsRow in cardsImages" 
+                  :key="cardsRow[0]?.id" 
+                  class="flex-col gap-2"
+              >
+                  <!-- Iterate over cards in a row -->
+                  <div 
+                      v-for="card in cardsRow" 
+                      :key="card.id" 
+                      class="bg-white w-24 aspect-[3/4] dark:bg-gray-700 rounded p-1"
+                  >
+                      <Card 
+                          v-if="!card.matched" 
+                          :card="card" 
+                          @flip="flipCard" 
+                          :turn="isMyTurn"
+                      />
+                  </div>
+              </div>
+          </div>
+      </div>
+    </CardComponent>
   </div>
 </template>
