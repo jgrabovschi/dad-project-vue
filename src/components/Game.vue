@@ -4,6 +4,7 @@ import Card from './Card.vue'
 import { inject } from 'vue' 
 import { useRouter } from 'vue-router'
 import { Card as CardComponent } from '@/components/ui/card'
+import { useStopwatch } from 'vue-timer-hook';
 
 const router = useRouter()
 
@@ -116,8 +117,16 @@ const flipCard = (card) => {
 const goToGamehistory = () =>{
   router.push('myprofile')
 }
+const autoStart = true;
+const stopwatch = useStopwatch(autoStart);
+
+const showSeconds = computed(() => {
+  return stopwatch.seconds.value + ( 60 * stopwatch.minutes.value);
+})
+
 watch(gameWon, (newValue, oldValue) => {
   if (newValue === true) {
+    stopwatch.pause()
     alertDialog.value.open( 
       goToGamehistory,  
         'Are you sure?', 'Cancel', `Yes, delete task #`, 
@@ -126,6 +135,8 @@ watch(gameWon, (newValue, oldValue) => {
   }
 });
 
+
+
 </script>
 
 <template>
@@ -133,6 +144,7 @@ watch(gameWon, (newValue, oldValue) => {
     <CardComponent class="max-w-6xl h-auto rounded-lg bg-white dark:bg-gray-800 border-0 shadow-md p-4">
       <div class="text-center">
           <p class="text-black dark:text-white mb-4 text-xl">Game</p>
+          <p class="text-black dark:text-white mb-4 text-xl">{{ showSeconds }}</p>
           <div class="flex items-center gap-2">
               <!-- Iterate over rows -->
               <div 

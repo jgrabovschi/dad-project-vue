@@ -28,8 +28,7 @@ const clickMulti = () =>{
 
 const startGame = (board) =>{
     //router.push({ name: 'game', params: { username: 'erina' } })
-    console.log(board)
-    //router.push({ name: 'game'})
+    router.push({ name: 'game'})
     //console.log(board)
 }
 
