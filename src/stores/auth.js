@@ -4,6 +4,8 @@ import axios from 'axios'
 import { useErrorStore } from '@/stores/error'
 import { useRouter } from 'vue-router'
 import avatarNoneAssetURL from '@/assets/avatar_none.jpg'
+import { useToast } from '@/components/ui/toast/use-toast'
+
 
 
 
@@ -11,6 +13,7 @@ export const useAuthStore = defineStore('auth', () => {
     const router = useRouter()
     const storeError = useErrorStore()
 
+    const { toast } = useToast()
     const user = ref(null)
     const token = ref('')
 
@@ -307,6 +310,11 @@ export const useAuthStore = defineStore('auth', () => {
                 await getUserDataAfterUpdate();
         
                 router.push({ name: 'myprofile' });
+
+                toast({
+                    description: 'Account info has been updated correctly!',
+                    })
+                    
                 
                 return response.data
             } catch (e) {
@@ -340,6 +348,10 @@ export const useAuthStore = defineStore('auth', () => {
                 await getUserDataAfterUpdate();
         
                 router.push({ name: 'myprofile' });
+
+                toast({
+                    description: 'Password has been updated correctly!',
+                    })
                 
                 return response.data
             } catch (e) {
