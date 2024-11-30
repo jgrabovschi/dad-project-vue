@@ -6,12 +6,12 @@ import Transactions from '@/components/Transactions.vue'
 import WebSocket from '@/components/WebSocketTester.vue'
 import Profile from '@/components/Profile.vue'
 import Home from '@/components/Home.vue'
-import GameHistory from '@/components/GameHistory.vue'
+import GameHistory from '@/components/gameHistory/GameHistory.vue'
 import Signup from '@/components/auth/Signup.vue'
 import EditProfile from '@/components/EditProfile.vue'
 import RemoveAccount from '@/components/RemoveAccount.vue'
 import ChossingGameMode from '@/components/ChossingGameMode.vue'
-
+import AdminTab from '@/components/admin/AdminTab.vue'
 
 
 const router = createRouter({
@@ -65,11 +65,15 @@ const router = createRouter({
       name: 'editprofile',
       component: EditProfile,
     },
-    ,
     {
       path: '/removeAccount',
       name: 'removeAccount',
       component: RemoveAccount,
+    },
+    {
+      path: '/adminTab',
+      name: 'adminTab',
+      component: AdminTab,
     }
   ],
 })

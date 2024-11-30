@@ -400,10 +400,14 @@ export const useAuthStore = defineStore('auth', () => {
         const canDeleteOwnAccount = () => {
             return user.value && userType.value === 'P'
         }
+
+        const isAdmin = () => {
+            return user.value && userType.value === 'A'
+        }
     
 
     return {
         user, userName, userFirstLastName, userEmail, userType, userGender, userPhotoUrl, gamesWon, nickname, balance,
-        login, logout, restoreToken, canUpdateDeleteProject, signup, updateProfile, validatePassword, updateProfilePassword, removeAccount, canDeleteOwnAccount
+        login, logout, restoreToken, canUpdateDeleteProject, signup, updateProfile, validatePassword, updateProfilePassword, removeAccount, canDeleteOwnAccount, isAdmin
     }
 })
