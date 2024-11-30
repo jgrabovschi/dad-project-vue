@@ -285,6 +285,8 @@ export const useAuthStore = defineStore('auth', () => {
         const updateProfile = async (credentials) => {
             const payload = {}
 
+            
+
             // Conditionally add fields to the payload
             if (credentials.email) {
                 payload.email = credentials.email
@@ -298,7 +300,8 @@ export const useAuthStore = defineStore('auth', () => {
             if (credentials.photo_filename) {
                 payload.photo_filename = credentials.photo_filename // Base64 encoded image
             }
-            console.log(payload);
+            
+            console.log(payload );
             try {
                 const response = await axios.put(`/users/${user.value.id}`, payload, {
                     headers: {
@@ -377,10 +380,34 @@ export const useAuthStore = defineStore('auth', () => {
             
             }
         }
+
+        const removeAccount = async () => {
+            storeError.resetMessages()
+            try {
+                await axios.delete(`/users/${user.value.id}`)
+                toast({
+                    description: 'Your account has been deleted!',
+                    })
+                clearUser()
+                return true
+            } catch (e) {
+                clearUser()
+                storeError.setErrorMessages(e.response.data.message, [], e.response.status, 'Authentication Error!')
+                return false
+            }
+        }
+
+        const canDeleteOwnAccount = () => {
+            return user.value && userType.value === 'P'
+        }
+
+        const isAdmin = () => {
+            return user.value && userType.value === 'A'
+        }
     
 
     return {
         user, userName, userFirstLastName, userEmail, userType, userGender, userPhotoUrl, gamesWon, nickname, balance,
-        login, logout, restoreToken, canUpdateDeleteProject, signup, updateProfile, validatePassword, updateProfilePassword
+        login, logout, restoreToken, canUpdateDeleteProject, signup, updateProfile, validatePassword, updateProfilePassword, removeAccount, canDeleteOwnAccount, isAdmin
     }
 })

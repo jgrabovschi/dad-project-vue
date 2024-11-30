@@ -9,6 +9,10 @@ import Home from '@/components/Home.vue'
 import GameHistory from '@/components/gameHistory/GameHistory.vue'
 import Signup from '@/components/auth/Signup.vue'
 import EditProfile from '@/components/EditProfile.vue'
+import RemoveAccount from '@/components/RemoveAccount.vue'
+import AdminTab from '@/components/admin/AdminTab.vue'
+
+
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -55,6 +59,16 @@ const router = createRouter({
       path: '/editprofile',
       name: 'editprofile',
       component: EditProfile,
+    },
+    {
+      path: '/removeAccount',
+      name: 'removeAccount',
+      component: RemoveAccount,
+    },
+    {
+      path: '/adminTab',
+      name: 'adminTab',
+      component: AdminTab,
     }
   ],
 })
