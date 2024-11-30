@@ -133,12 +133,12 @@ watch(gameWon, (newValue, oldValue) => {
     <CardComponent class="max-w-6xl h-auto rounded-lg bg-white dark:bg-gray-800 border-0 shadow-md p-4">
       <div class="text-center">
           <p class="text-black dark:text-white mb-4 text-xl">Game</p>
-          <div class="flex-col items-center gap-2">
+          <div class="flex items-center gap-2">
               <!-- Iterate over rows -->
               <div 
                   v-for="cardsRow in cardsImages" 
                   :key="cardsRow[0]?.id" 
-                  class="flex gap-2"
+                  class="flex-col gap-2"
               >
                   <!-- Iterate over cards in a row -->
                   <div 
