@@ -6,6 +6,7 @@ import { Pagination, PaginationList, PaginationFirst, PaginationPrev, Pagination
 import { HoverCard, HoverCardTrigger, HoverCardContent } from '@/components/ui/hover-card'
 import { useGamesStore } from '@/stores/games';
 import GameHistoryFormFilter from './GameHistoryFormFilter.vue'
+import { VueSpinnerPacman } from 'vue3-spinners'
 
 const gamesStore = useGamesStore()
 gamesStore.loadGames()
@@ -25,8 +26,7 @@ gamesStore.loadGames()
         <GameHistoryFormFilter class="p-4" />
         <div class="overflow-x-auto">
           <div v-if="gamesStore.isLoading" class="flex justify-center items-center h-32">
-            <span class="loader"></span> <!-- Loader Customizado -->
-            <p class="ml-4 text-gray-600 dark:text-gray-400">Loading data...</p>
+            <VueSpinnerPacman size="30" color="white" />
           </div>
           <Table v-if="!gamesStore.isLoading" class="min-w-full">
             <TableHeader>
