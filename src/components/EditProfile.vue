@@ -135,7 +135,7 @@ const updateConfirmed = () => {
 -->
 
 <template>
-  <Tabs default-value="account" class="w-[400px] ">
+  <Tabs default-value="account" class="w-[400px] mx-auto">
     <TabsList class="grid w-full grid-cols-2 mx-auto bg-white dark:bg-gray-800 border-0">
       <TabsTrigger value="account">
         Account Info
