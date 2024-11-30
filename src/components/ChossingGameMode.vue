@@ -5,9 +5,12 @@ import { Button } from '@/components/ui/button'
 import { useBoardsStore } from '@/stores/boards';
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
+import axios from 'axios';
+import { useErrorStore } from '@/stores/error'
 
 
 const storeAuth = useAuthStore()
+const storeError = useErrorStore()
 const router = useRouter()
 
 const singlePlayerChosen = ref(false);
@@ -28,7 +31,42 @@ const clickMulti = () =>{
 
 const startGame = (board) =>{
     //router.push({ name: 'game', params: { username: 'erina' } })
-    router.push({ name: 'game'})
+    if(storeAuth.user == null){
+        router.push({ name: 'game'})
+    }
+    
+    if(singlePlayerChosen.value){
+        /*
+        'created_user_id' => 'required|integer|exists:users,id',
+        'type' => 'required|string|in:S,M',
+        'board_id' => 'required|integer|exists:users,id',*/
+
+        try {
+            const payload = {
+            created_user_id: storeAuth.user.id,
+            type: 'S',
+            board_id: board.id,
+            };
+
+            const response = axios.post('/games', payload)
+            .then((response) => {
+                console.log(response.data.data)
+                router.push({ name: 'game', query: {game_id: response.data.data.id, 
+                                                    board_cols: board.board_cols, 
+                                                    board_rows: board.board_rows}})
+                /* fazer aqui o depois
+                
+                isLoading.value = false
+                return response*/
+            });
+
+        } catch (e) {
+            //console.log(e);
+            storeError.setErrorMessages(e.response.data.message, e.response.data.errors, e.response.status, 'Getting Games Error!')
+        }
+    } else{
+
+    }
     //console.log(board)
 }
 

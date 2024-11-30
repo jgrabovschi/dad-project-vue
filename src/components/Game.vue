@@ -2,11 +2,19 @@
 import { ref, computed, watch } from 'vue'
 import Card from './Card.vue'
 import { inject } from 'vue' 
-import { useRouter } from 'vue-router'
+import { useRoute } from 'vue-router'
 import { Card as CardComponent } from '@/components/ui/card'
 import { useStopwatch } from 'vue-timer-hook';
 
-const router = useRouter()
+const route = useRoute()
+
+const game_id = ref(null);
+const board_cols = ref(null);
+const board_rows = ref(null);
+
+game_id.value = route.query?.game_id ?? null;
+board_cols.value = route.query?.board_cols ?? null;
+board_rows.value = route.query?.board_rows ?? null;
 
 //tamanho do board isto está hardcoded para 3x4
 var size = 12
@@ -145,6 +153,8 @@ watch(gameWon, (newValue, oldValue) => {
       <div class="text-center">
           <p class="text-black dark:text-white mb-4 text-xl">Game</p>
           <p class="text-black dark:text-white mb-4 text-xl">{{ showSeconds }}</p>
+          <!--<p class="text-black dark:text-white mb-4 text-xl">{{ game_id }}</p>
+          <p class="text-black dark:text-white mb-4 text-xl">{{ board }}</p>-->
           <div class="flex items-center gap-2">
               <!-- Iterate over rows -->
               <div 
