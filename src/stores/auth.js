@@ -67,6 +67,17 @@ export const useAuthStore = defineStore('auth', () => {
         router.push({ name: 'login' })
     }
 
+    const validatePassword = async (password) => {
+        storeError.resetMessages()
+        try {
+            const response = await axios.post('auth/validatepassword', { password })
+            return response.data
+        } catch (e) {
+            storeError.setErrorMessages(e.response.data.message, e.response.data.errors, e.response.status, 'Current password is incorrect')
+            return false
+        }
+    }
+
     const login = async (credentials) => {
         storeError.resetMessages()
         try {
@@ -284,13 +295,40 @@ export const useAuthStore = defineStore('auth', () => {
             if (credentials.photo_filename) {
                 payload.photo_filename = credentials.photo_filename // Base64 encoded image
             }
-            if (credentials.password) {
-                payload.password = credentials.password
-            }
+            console.log(payload);
+            try {
+                const response = await axios.put(`/users/${user.value.id}`, payload, {
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                })
 
-            //console.log(payload);
-
+                console.log(response.data);
+                await getUserDataAfterUpdate();
         
+                router.push({ name: 'myprofile' });
+                
+                return response.data
+            } catch (e) {
+                console.log(e);
+                if (e.response) {
+                    storeError.setErrorMessages(e.response.data.message, e.response.data.errors, e.response.status, 'Update Profile Error!')
+                } else {
+                    storeError.setErrorMessages('An unexpected error occurred.')
+                }
+                return false
+            }
+        }
+
+        const updateProfilePassword = async (password) => {
+            const payload = {}
+
+            // Conditionally add fields to the payload
+            if (password) {
+                payload.password = password
+            }
+            
+            //console.log(payload);
             try {
                 const response = await axios.put(`/users/${user.value.id}`, payload, {
                     headers: {
@@ -331,6 +369,6 @@ export const useAuthStore = defineStore('auth', () => {
 
     return {
         user, userName, userFirstLastName, userEmail, userType, userGender, userPhotoUrl, gamesWon, nickname, balance,
-        login, logout, restoreToken, canUpdateDeleteProject, signup, updateProfile
+        login, logout, restoreToken, canUpdateDeleteProject, signup, updateProfile, validatePassword, updateProfilePassword
     }
 })
