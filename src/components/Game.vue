@@ -18,7 +18,6 @@ const gameWon = computed(() => {
   return pairsFound.value == size/2 ? true : false
 })
 const isMyTurn =ref(true);
-const nrCardsFlippedPerTurn = ref(0);
 
 function generateRandomPairs(x) {
   //min e max de imagem de cartas. cada numero é um par de cartas

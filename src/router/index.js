@@ -10,6 +10,7 @@ import GameHistory from '@/components/GameHistory.vue'
 import Signup from '@/components/auth/Signup.vue'
 import EditProfile from '@/components/EditProfile.vue'
 import RemoveAccount from '@/components/RemoveAccount.vue'
+import ChossingGameMode from '@/components/ChossingGameMode.vue'
 
 
 
@@ -25,6 +26,11 @@ const router = createRouter({
       path: '/login',
       name: 'login',
       component: Login,
+    },
+    {
+      path: '/gameMode',
+      name: 'gameMode',
+      component: ChossingGameMode,
     },
     {
       path: '/game',
