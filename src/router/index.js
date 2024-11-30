@@ -10,6 +10,7 @@ import GameHistory from '@/components/GameHistory.vue'
 import Signup from '@/components/auth/Signup.vue'
 import EditProfile from '@/components/EditProfile.vue'
 import RemoveAccount from '@/components/RemoveAccount.vue'
+import AdminTab from '@/components/admin/AdminTab.vue'
 
 
 
@@ -59,11 +60,15 @@ const router = createRouter({
       name: 'editprofile',
       component: EditProfile,
     },
-    ,
     {
       path: '/removeAccount',
       name: 'removeAccount',
       component: RemoveAccount,
+    },
+    {
+      path: '/adminTab',
+      name: 'adminTab',
+      component: AdminTab,
     }
   ],
 })
