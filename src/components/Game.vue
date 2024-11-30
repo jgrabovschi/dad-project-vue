@@ -72,6 +72,7 @@ for (var i = 0; i < size ; i++) {
 }
 
 cardsImages.value = transformToXY(cardsImages.value, 4, 3)
+console.log(cardsImages.value)
 
 let flippedPair = []
 
