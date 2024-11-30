@@ -377,10 +377,26 @@ export const useAuthStore = defineStore('auth', () => {
             
             }
         }
+
+        const removeAccount = async () => {
+            storeError.resetMessages()
+            try {
+                await axios.delete(`/users/${user.value.id}`)
+                toast({
+                    description: 'Your account has been deleted!',
+                    })
+                clearUser()
+                return true
+            } catch (e) {
+                clearUser()
+                storeError.setErrorMessages(e.response.data.message, [], e.response.status, 'Authentication Error!')
+                return false
+            }
+        }
     
 
     return {
         user, userName, userFirstLastName, userEmail, userType, userGender, userPhotoUrl, gamesWon, nickname, balance,
-        login, logout, restoreToken, canUpdateDeleteProject, signup, updateProfile, validatePassword, updateProfilePassword
+        login, logout, restoreToken, canUpdateDeleteProject, signup, updateProfile, validatePassword, updateProfilePassword, removeAccount
     }
 })
