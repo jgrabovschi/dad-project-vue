@@ -26,7 +26,7 @@ gamesStore.loadGames()
         <GameHistoryFormFilter class="p-4" />
         <div class="overflow-x-auto">
           <div v-if="gamesStore.isLoading" class="flex justify-center items-center h-32">
-            <VueSpinnerPacman size="30" color="white" />
+            <VueSpinnerPacman size="30" color="gray" />
           </div>
           <Table v-if="!gamesStore.isLoading" class="min-w-full">
             <TableHeader>
