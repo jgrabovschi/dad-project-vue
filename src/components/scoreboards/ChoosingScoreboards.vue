@@ -25,13 +25,13 @@ const showPersonal = () => {
     <Card class="w-full max-w-6xl h-auto rounded-lg bg-white dark:bg-gray-800 border-0 shadow-md">
       <CardHeader class="px-4">
         <CardTitle class="text-lg md:text-xl text-black dark:text-white">Scoreboards</CardTitle>
-        <CardDescription class="text-sm md:text-base">Choose a scoreboard to see the results. You need to log in to see personal scoreboards. 
+        <CardDescription class="text-sm md:text-base">Choose a scoreboard to see the results. You need to have an account to see personal scoreboards. 
         </CardDescription>
       </CardHeader>
       <CardContent>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4" >
           <!-- Global Scoreboards Button -->
-          <div class="p-6 text-white rounded-lg shadow-lg cursor-pointer bg-blue-400" @click="showGlobal">
+          <div class="p-6 text-white rounded-lg shadow-lg bg-blue-400">
             <svg 
                     class="mx-auto"
                     xmlns="http://www.w3.org/2000/svg"
@@ -50,7 +50,7 @@ const showPersonal = () => {
           </div>
           <!-- Personal scoreboards Button -->
           <div>
-            <div v-if="storeAuth.user" class="p-6 text-white rounded-lg shadow-lg cursor-pointer bg-red-400" @click="showPersonal">
+            <div v-if="storeAuth.user" class="p-6 text-white rounded-lg shadow-lg bg-red-400" >
                 <svg 
                     class="mx-auto"
                     xmlns="http://www.w3.org/2000/svg"
@@ -67,7 +67,7 @@ const showPersonal = () => {
                 See your own best personal bests.
               </p>
             </div>
-            <div v-else class="relative p-6 text-white rounded-lg shadow-lg cursor-not-allowed bg-black">
+            <div v-else class="relative p-6 text-white rounded-lg shadow-lg bg-black">
 
                 <svg
                     class="mx-auto"
@@ -93,15 +93,45 @@ const showPersonal = () => {
 
           </div>
         </div>        
-        <div v-if="globalOptions" class="mt-4">
-            Singleplayer: Best times for each board, Minimum turns for each board
-            <br>
-            Multiplayer: Top 5 most victories
-        </div>
-        <div v-if="personalOptions" class="mt-4">
-            Singleplayer: Best times for each board, Minimum turns for each board
-            <br>
-            Multiplayer: Total victories, Total defeats  
+        <div class="mt-4">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mt-4" >
+                <!-- Singleplayer -->
+                <div class="p-6 text-white rounded-lg shadow-lg cursor-pointer bg-green-400" @click="">
+                    <h2 class="text-xl font-bold text-center">Global Singleplayer</h2>
+                    <p class="text-sm mt-2 text-center">
+                        See the best performances in singleplayer around the world.
+                    </p>
+                </div>
+                <!-- Multiplayer -->
+                <div>
+                    <div class="p-6 text-white rounded-lg shadow-lg cursor-pointer bg-green-400" @click="">
+                    <h2 class="text-xl font-bold text-center">Global Multiplayer</h2>
+                    <p class="text-sm mt-2 text-center">
+                        See the best performances in multiplayer around the world.
+                    </p>
+                    </div>
+                </div>
+            <!-- </div>  
+             </div>
+        <div  class="mt-4">  
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mt-4" > -->
+                <!-- Singleplayer -->
+                <div class="p-6 text-white rounded-lg shadow-lg cursor-pointer" :class="storeAuth.user ? 'bg-purple-400' : 'bg-black cursor-not-allowed'" @click="">
+                    <h2 class="text-xl font-bold text-center">Personal Singleplayer</h2>
+                    <p class="text-sm mt-2 text-center">
+                        See the your best performances in singleplayer.
+                    </p>
+                </div>
+                <!-- Multiplayer -->
+                <div>
+                    <div class="p-6 text-white rounded-lg shadow-lg cursor-pointer" :class="storeAuth.user ? 'bg-purple-400' : 'bg-black cursor-not-allowed'" @click="">
+                    <h2 class="text-xl font-bold text-center">Personal Multiplayer</h2>
+                    <p class="text-sm mt-2 text-center">
+                        See the your best performances in multiplayer.
+                    </p>
+                    </div>
+                </div>
+            </div>        
         </div>
       </CardContent>
     </Card>
