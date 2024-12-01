@@ -12,6 +12,7 @@ import EditProfile from '@/components/EditProfile.vue'
 import RemoveAccount from '@/components/RemoveAccount.vue'
 import ChossingGameMode from '@/components/ChossingGameMode.vue'
 import AdminTab from '@/components/admin/AdminTab.vue'
+import ChoosingScoreboards from '@/components/scoreboards/ChoosingScoreboards.vue'
 
 
 
@@ -75,6 +76,11 @@ const router = createRouter({
       path: '/adminTab',
       name: 'adminTab',
       component: AdminTab,
+    },
+    {
+      path: '/chooseScoreboard',
+      name: 'chooseScoreboard',
+      component: ChoosingScoreboards,
     }
   ],
 })
