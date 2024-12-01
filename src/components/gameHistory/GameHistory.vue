@@ -44,7 +44,7 @@ gamesStore.loadGames()
             <TableBody>
               <TableRow v-for="game in gamesStore.games" :key="game.id">
                     <TableCell class="font-medium dark:text-slate-300 text-xs md:text-sm">
-                        {{ game.ended_at }}
+                        {{ (new Date(game.ended_at)).toLocaleString() }}
                     </TableCell>
                     <TableCell class="dark:text-slate-300 text-xs md:text-sm">
                         {{ game.status == 'E' ? 'Ended' : game.status == 'PE' ? 'Pending' : game.status == 'I' ? 'Interrupted' : 'In Progress' }}
