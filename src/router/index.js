@@ -14,6 +14,7 @@ import ChossingGameMode from '@/components/ChossingGameMode.vue'
 import AdminTab from '@/components/admin/AdminTab.vue'
 
 
+
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
