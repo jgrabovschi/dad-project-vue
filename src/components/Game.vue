@@ -2,92 +2,58 @@
 import { ref, computed, watch } from 'vue'
 import Card from './Card.vue'
 import { inject } from 'vue' 
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
+import {  } from 'vue-router'
 import { Card as CardComponent } from '@/components/ui/card'
 import { useStopwatch } from 'vue-timer-hook';
+import { useMemoryGame } from '../composables/memoryGame.js'
+import { useAuthStore } from '@/stores/auth'
+import { useErrorStore } from '@/stores/error'
+
+
+const storeAuth = useAuthStore()
+const storeError = useErrorStore()
 
 const route = useRoute()
+const router = useRouter()
 
 const game_id = ref(null);
 const board_cols = ref(null);
 const board_rows = ref(null);
 
 game_id.value = route.query?.game_id ?? null;
-board_cols.value = route.query?.board_cols ?? null;
-board_rows.value = route.query?.board_rows ?? null;
+board_cols.value = route.query?.board_cols ?? 3;
+board_rows.value = route.query?.board_rows ?? 4;
+//mudar para int. util
+if((typeof board_cols.value) === "string"){
+  board_cols.value = parseInt(board_cols.value)
+  board_rows.value = parseInt(board_rows.value)
+}
 
 //tamanho do board isto está hardcoded para 3x4
-var size = 12
-const cardsImages = ref([])
-const pairsFound = ref(0);
+const size = ref(null);
+size.value = game_id.value != null ? board_cols.value * board_rows.value : 12;
+
+const {
+    status,
+    currentPlayer: player,
+    cardsImages,
+    pairsFound,
+    gameWon,
+    startGame
+} = useMemoryGame(board_rows.value, board_cols.value)
 
 const alertDialog = inject('alertDialog') 
+//isto provalmente vai para dentro do composoble
 
-const gameWon = computed(() => {
-  return pairsFound.value == size/2 ? true : false
-})
-const isMyTurn =ref(true);
-
-function generateRandomPairs(x) {
-  //min e max de imagem de cartas. cada numero é um par de cartas
-  const min = 1;
-  const max = 40;
-  const uniqueNumbers = new Set();
-
-  // Gera `x` números únicos
-  while (uniqueNumbers.size < x /2 ) {
-    //linha a seguir devo conseguir reduzir
-    const randomNumber = Math.floor(Math.random() * (max - min + 1)) + min;
-    uniqueNumbers.add(randomNumber);
-  }
-
-  // Converte os números únicos em um array com pares (duplicados)
-  const pairsArray = [...uniqueNumbers, ...uniqueNumbers];
-
-  console.log(pairsArray)
-
-  // Embaralha o array de pares
-  for (let i = pairsArray.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [pairsArray[i], pairsArray[j]] = [pairsArray[j], pairsArray[i]];
-  }
-
-  return pairsArray;
-}
-
-function transformToXY(array, x, y) {
-  if (array.length !== x * y) {
-    throw new Error("The size of the array must be equal to x * y");
-  }
-
-  const matrix = [];
-  for (let i = 0; i < x; i++) {
-    matrix.push(array.slice(i * y, i * y + y));
-  }
-  return matrix;
-}
-
-const pairs = generateRandomPairs(size);
-console.log(pairs);
-
-for (var i = 0; i < size ; i++) {
-    cardsImages.value.push({
-        id: i,
-        pair_id: pairs[i],
-        src: `/cards/${pairs[i]}.png`,
-        flipped: false,
-        matched: false
-    })
-}
-
-cardsImages.value = transformToXY(cardsImages.value, 4, 3)
-console.log(cardsImages.value)
+const isMyTurn = ref(true);
 
 let flippedPair = []
 
 const resetTurn = () =>{
     isMyTurn.value = true;
 }
+
 const flipCard = (card) => {
     
     if(!isMyTurn.value || card.matched || card.flipped){
@@ -125,6 +91,11 @@ const flipCard = (card) => {
 const goToGamehistory = () =>{
   router.push('myprofile')
 }
+
+startGame(board_rows.value , board_cols.value)
+
+console.log(cardsImages.value)
+
 const autoStart = true;
 const stopwatch = useStopwatch(autoStart);
 
@@ -132,17 +103,44 @@ const showSeconds = computed(() => {
   return stopwatch.seconds.value + ( 60 * stopwatch.minutes.value);
 })
 
+
+
 watch(gameWon, (newValue, oldValue) => {
   if (newValue === true) {
     stopwatch.pause()
     alertDialog.value.open( 
       goToGamehistory,  
-        'Are you sure?', 'Cancel', `Yes, delete task #`, 
+        'Are you sure?', 'Cancel', `Yes, delete task #` + showSeconds.value, 
         `This action cannot be undone. This will permanently delete the task 
         " from our servers.`) 
+
+    if(storeAuth.user != null){
+      try {
+        /*const payload = {
+        created_user_id: storeAuth.user.id,
+        type: 'S',
+        board_id: board.id,
+        };*/
+
+        const response = axios.put(`/games/${game_id.value}`)
+        .then((response) => {
+            //console.log(response.data.data)
+            //fazer update das coins visualmente
+            router.push({ name: 'gameMode'})
+            /* fazer aqui o depois
+            
+            isLoading.value = false
+            return response*/
+        });
+
+    } catch (e) {
+        //console.log(e);
+        storeError.setErrorMessages(e.response.data.message, e.response.data.errors, e.response.status, 'Getting Games Error!')
+    }
+    }
+    
   }
 });
-
 
 
 </script>

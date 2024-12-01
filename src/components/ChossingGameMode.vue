@@ -49,6 +49,7 @@ const startGame = (board) =>{
             const response = axios.post('/games', payload)
             .then((response) => {
                 console.log(response.data.data)
+                //fazer update das coins visualmente
                 router.push({ name: 'game', query: {game_id: response.data.data.id, 
                                                     board_cols: board.board_cols, 
                                                     board_rows: board.board_rows}})
@@ -109,15 +110,25 @@ const checkAvailbleBoards = (board) =>{
               </p>
             </div>
             <!-- Multiplayer Button -->
-            <div @click="clickMulti" class="p-6 text-white rounded-lg shadow-lg cursor-pointer"
-              :class="{
-                'bg-green-500 hover:bg-green-600': !multiPlayerChosen,
-                'bg-green-800': multiPlayerChosen
-              }">
-              <h2 class="text-xl font-bold">Multiplayer</h2>
-              <p class="text-sm mt-2">
-                Challenge others in a battle of brains and memory.
-              </p>
+            <div>
+              <div v-if="storeAuth.user != null" @click="clickMulti" class="p-6 text-white rounded-lg shadow-lg cursor-pointer"
+                :class="{
+                  'bg-green-500 hover:bg-green-600': !multiPlayerChosen,
+                  'bg-green-800': multiPlayerChosen
+                }">
+                <h2 class="text-xl font-bold">Multiplayer</h2>
+                <p class="text-sm mt-2">
+                  Challenge others in a battle of brains and memory.
+                </p>
+              </div>
+              <div v-else class="p-6 text-white rounded-lg shadow-lg cursor-pointer bg-green-800">
+                <h2 class="text-xl font-bold">Multiplayer</h2>
+                <div class="flex justify-center">
+                  <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e8eaed">
+                          <path d="M240-80q-33 0-56.5-23.5T160-160v-400q0-33 23.5-56.5T240-640h40v-80q0-83 58.5-141.5T480-920q83 0 141.5 58.5T680-720v80h40q33 0 56.5 23.5T800-560v400q0 33-23.5 56.5T720-80H240Zm0-80h480v-400H240v400Zm240-120q33 0 56.5-23.5T560-360q0-33-23.5-56.5T480-440q-33 0-56.5 23.5T400-360q0 33 23.5 56.5T480-280ZM360-640h240v-80q0-50-35-85t-85-35q-50 0-85 35t-35 85v80ZM240-160v-400 400Z"/>
+                  </svg>
+                </div>
+              </div>
             </div>
           </div>
         </CardContent>
