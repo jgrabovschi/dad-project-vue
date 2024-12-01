@@ -217,6 +217,7 @@ export const useAuthStore = defineStore('auth', () => {
                 password: credentials.password,
                 name: credentials.name,
                 nickname: credentials.nickname,
+                type: credentials.type,
                 photo_filename: credentials.photo_filename // Base64 encoded image
             }
         
@@ -226,12 +227,18 @@ export const useAuthStore = defineStore('auth', () => {
                         'Content-Type': 'application/json'
                     }
                 })
-                router.push({ name: 'login' })
+                if(credentials.type === 'P'){
+                    router.push({ name: 'login' })
+                }
+                toast({
+                    description: 'User has been created correctly!',
+                    })
                 return response.data
             } catch (e) {
                 if (e.response) {
                     storeError.setErrorMessages(e.response.data.message, e.response.data.errors, e.response.status, 'Signup Error!')
                 } else {
+                    console.log(e)
                     storeError.setErrorMessages('An unexpected error occurred.')
                 }
                 return false

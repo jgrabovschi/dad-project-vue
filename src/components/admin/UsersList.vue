@@ -9,6 +9,8 @@ import { Button } from '@/components/ui/button'
 import { inject } from 'vue'
 import UserListFormSearch from './UserListFormSearch.vue'
 import { useToast } from '@/components/ui/toast/use-toast'
+import { useAuthStore } from '@/stores/auth'
+import { computed } from 'vue'
 
 
 
@@ -17,6 +19,9 @@ const searchQuery = ref('')
 const userStore = useUsersStore()
 const { toast } = useToast()   
 const alertDialog = inject('alertDialog')
+const storeAuth = useAuthStore()
+
+const currentUserId = computed(() => storeAuth.user.id)
 
 
 const removeAccountConfirmed = async (id) => {
@@ -104,7 +109,7 @@ userStore.loadUsers()
                 </TableRow>
               </TableHeader>
               <TableBody>
-                <TableRow v-for="user in userStore.users" :key="user.id">
+                <TableRow v-for="user in userStore.users.filter(user => user.id !== currentUserId)" :key="user.id">
                   <TableCell class="font-medium dark:text-slate-300 text-xs md:text-sm">
                     {{ user.id }}
                   </TableCell>
