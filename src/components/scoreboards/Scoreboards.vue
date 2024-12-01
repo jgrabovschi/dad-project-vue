@@ -2,21 +2,15 @@
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card'
 import { useAuthStore } from '@/stores/auth'
 import { ref } from 'vue'
+import { VueSpinnerPacman } from 'vue3-spinners';
+import { useScoreboardsStore } from '@/stores/scoreboards'
+import { Table, TableHeader, TableRow, TableBody, TableCell, TableHead } from '@/components/ui/table'
+import ScoreBoardsFilter from './ScoreBoardsFilter.vue';
+
 
 const storeAuth = useAuthStore()
-
-const globalOptions = ref(false)
-const personalOptions = ref(false)
-
-const showGlobal = () => {
-    globalOptions.value = true
-    personalOptions.value = false
-}
-
-const showPersonal = () => {
-    globalOptions.value = false
-    personalOptions.value = true
-}
+const storeScoreboards = useScoreboardsStore()
+storeScoreboards.clearScores()
 
 </script>
 
@@ -96,7 +90,7 @@ const showPersonal = () => {
         <div class="mt-4">
             <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mt-4" >
                 <!-- Singleplayer -->
-                <div class="p-6 text-white rounded-lg shadow-lg cursor-pointer bg-green-400" @click="">
+                <div class="p-6 text-white rounded-lg shadow-lg cursor-pointer bg-green-400" @click="storeScoreboards.showSingleplayerGlobal">
                     <h2 class="text-xl font-bold text-center">Global Singleplayer</h2>
                     <p class="text-sm mt-2 text-center">
                         See the best performances in singleplayer around the world.
@@ -111,27 +105,45 @@ const showPersonal = () => {
                     </p>
                     </div>
                 </div>
-            <!-- </div>  
-             </div>
-        <div  class="mt-4">  
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mt-4" > -->
                 <!-- Singleplayer -->
-                <div class="p-6 text-white rounded-lg shadow-lg cursor-pointer" :class="storeAuth.user ? 'bg-purple-400' : 'bg-black cursor-not-allowed'" @click="">
+                <div class="p-6 text-white rounded-lg shadow-lg cursor-pointer" :class="storeAuth.user ? 'bg-purple-400' : 'bg-black cursor-not-allowed'">
                     <h2 class="text-xl font-bold text-center">Personal Singleplayer</h2>
                     <p class="text-sm mt-2 text-center">
                         See the your best performances in singleplayer.
                     </p>
                 </div>
                 <!-- Multiplayer -->
-                <div>
-                    <div class="p-6 text-white rounded-lg shadow-lg cursor-pointer" :class="storeAuth.user ? 'bg-purple-400' : 'bg-black cursor-not-allowed'" @click="">
+                
+                <div class="p-6 text-white rounded-lg shadow-lg cursor-pointer" :class="storeAuth.user ? 'bg-purple-400' : 'bg-black cursor-not-allowed'">
                     <h2 class="text-xl font-bold text-center">Personal Multiplayer</h2>
                     <p class="text-sm mt-2 text-center">
                         See the your best performances in multiplayer.
                     </p>
-                    </div>
                 </div>
+            
             </div>        
+        </div>
+        <div v-if="storeScoreboards.isLoading" class="flex justify-center items-center h-32">
+            <VueSpinnerPacman size="30" color="gray" />
+        </div>
+        <div v-else-if="storeScoreboards.showTable">
+            <ScoreBoardsFilter class="m-4 mt-8"></ScoreBoardsFilter>
+            <Table class="min-w-full ">
+            <TableHeader>
+              <TableRow>
+                <TableHead class="dark:text-white text-xs md:text-sm">Board type</TableHead>
+                <TableHead class="dark:text-white text-xs md:text-sm">Nickname</TableHead>
+                <TableHead class="dark:text-white text-xs md:text-sm">Score</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              <TableRow v-for="score in storeScoreboards.scoreboards">
+                <TableCell class="dark:text-slate-300 text-xs md:text-sm">{{ score.board }}</TableCell>
+                <TableCell class="dark:text-slate-300 text-xs md:text-sm">{{ score.user }}</TableCell>
+                <TableCell class="dark:text-slate-300 text-xs md:text-sm">{{ storeScoreboards.filter == 'turns' ? Number(score.performance).toFixed(0) +  ' turns' : score.performance + ' seconds' }}</TableCell>
+              </TableRow>
+            </TableBody>
+          </Table>
         </div>
       </CardContent>
     </Card>
