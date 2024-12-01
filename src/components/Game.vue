@@ -9,6 +9,7 @@ import { useStopwatch } from 'vue-timer-hook';
 import { useMemoryGame } from '../composables/memoryGame.js'
 import { useAuthStore } from '@/stores/auth'
 import { useErrorStore } from '@/stores/error'
+import axios from 'axios';
 
 
 const storeAuth = useAuthStore()
@@ -120,8 +121,9 @@ watch(gameWon, (newValue, oldValue) => {
         created_user_id: storeAuth.user.id,
         type: 'S',
         board_id: board.id,
+        status: 'E'
         };*/
-
+        console.log(game_id.value)
         const response = axios.put(`/games/${game_id.value}`)
         .then((response) => {
             //console.log(response.data.data)
@@ -134,7 +136,7 @@ watch(gameWon, (newValue, oldValue) => {
         });
 
     } catch (e) {
-        //console.log(e);
+        console.log(e);
         storeError.setErrorMessages(e.response.data.message, e.response.data.errors, e.response.status, 'Getting Games Error!')
     }
     }
