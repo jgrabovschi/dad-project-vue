@@ -5,10 +5,14 @@ import { useUsersStore } from '@/stores/users'
 
 const userStore = useUsersStore()
 
+//const searchName = ref('')
+
 const handleKeyUp = () => {
   userStore.loadUsers()
 }
 
+
+//@keyup="handleKeyUp"
 </script>
 
 <template>
@@ -20,9 +24,8 @@ const handleKeyUp = () => {
           v-model="userStore.searchName"
           placeholder="Search by name"
           class="w-full p-2 border rounded"
-          @keyup="handleKeyUp"
         />
-        <button @click="userStore.searchByName" class="mt-2 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
+        <button @click="handleKeyUp" class="mt-2 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
           Search
         </button>
       </div>
