@@ -5,10 +5,12 @@ import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from '@
 import { Pagination, PaginationList, PaginationFirst, PaginationPrev, PaginationListItem, PaginationEllipsis, PaginationNext, PaginationLast } from '@/components/ui/pagination'
 import { HoverCard, HoverCardTrigger, HoverCardContent } from '@/components/ui/hover-card'
 import { useGamesStore } from '@/stores/games';
+import { useAuthStore } from '@/stores/auth';
 import GameHistoryFormFilter from './GameHistoryFormFilter.vue'
 import { VueSpinnerPacman } from 'vue3-spinners'
 
 const gamesStore = useGamesStore()
+const authStore = useAuthStore()
 gamesStore.loadGames()
 
 </script>
@@ -33,7 +35,7 @@ gamesStore.loadGames()
               <TableRow>
                 <TableHead class="w-[150px] md:w-[200px] dark:text-white text-xs md:text-sm">Date</TableHead>
                 <TableHead class="dark:text-white text-xs md:text-sm">Status</TableHead>
-                <TableHead v-if="gamesStore.typeFilter == 'multiplayer'" class="dark:text-white text-xs md:text-sm">Creator</TableHead>
+                <TableHead v-if="gamesStore.typeFilter == 'multiplayer' || authStore.isAdmin" class="dark:text-white text-xs md:text-sm">Creator</TableHead>
                 <TableHead v-if="gamesStore.typeFilter == 'multiplayer'" class="dark:text-white text-xs md:text-sm">Winner</TableHead>
                 <TableHead class="dark:text-white text-xs md:text-sm">Board</TableHead>
                 <TableHead class="dark:text-white text-xs md:text-sm">Total Time</TableHead>
@@ -49,7 +51,7 @@ gamesStore.loadGames()
                     <TableCell class="dark:text-slate-300 text-xs md:text-sm">
                         {{ game.status == 'E' ? 'Ended' : game.status == 'PE' ? 'Pending' : game.status == 'I' ? 'Interrupted' : 'In Progress' }}
                     </TableCell>
-                    <TableCell v-if="game.type == 'M'" class="dark:text-slate-300 text-xs md:text-sm">
+                    <TableCell v-if="game.type == 'M' || authStore.isAdmin" class="dark:text-slate-300 text-xs md:text-sm">
                       {{ game.created ?? 'No Creator'}}
                     </TableCell>
                     <TableCell v-if="game.type == 'M'" class="dark:text-slate-300 text-xs md:text-sm">
