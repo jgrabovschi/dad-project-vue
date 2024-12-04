@@ -1,7 +1,7 @@
 <script setup>
 import { RouterLink } from 'vue-router';
 import Game from './Game.vue'
-import Transactions from './Transactions.vue';
+import Transactions from './transactions/Transactions.vue';
 import { useAuthStore } from '@/stores/auth'
 import { provide, useTemplateRef } from 'vue'
 import GlobalAlertDialog from '@/components/common/GlobalAlertDialog.vue'
