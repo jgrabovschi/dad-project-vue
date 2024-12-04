@@ -105,6 +105,7 @@ userStore.loadUsers()
                   <TableHead class="w-[150px] md:w-[200px] dark:text-white text-xs md:text-sm">ID</TableHead>
                   <TableHead class="dark:text-white text-xs md:text-sm">Name</TableHead>
                   <TableHead class="dark:text-white text-xs md:text-sm">Email</TableHead>
+                  <TableHead class="dark:text-white text-xs md:text-sm">Nickname</TableHead>
                   <TableHead class="dark:text-white text-xs md:text-sm">Actions</TableHead>
                 </TableRow>
               </TableHeader>
@@ -120,6 +121,9 @@ userStore.loadUsers()
                     {{ user.email }}
                   </TableCell>
                   <TableCell class="dark:text-slate-300 text-xs md:text-sm">
+                    {{ user.nickname }}
+                  </TableCell>
+                  <TableCell class="dark:text-slate-300 text-xs md:text-sm">
                     <button @click="removeAccount(user.id)" class="bg-red-500 text-white px-2 py-1 rounded">Remove Account</button>
                     <button @click="toggleBlockUser(user)" :class="user.blocked ? 'bg-green-500' : 'bg-yellow-500'" class="text-white px-2 py-1 rounded ml-2">
                     {{ user.blocked ? 'Unblock' : 'Block' }}
@@ -131,6 +135,7 @@ userStore.loadUsers()
           </div>
           <br>
           <Pagination
+            v-if="!userStore.isLoading"
             :v-slot="userStore.currentPage"
             :total="userStore.totalItems"
             :sibling-count="2"

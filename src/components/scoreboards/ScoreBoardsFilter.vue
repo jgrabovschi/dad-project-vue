@@ -17,8 +17,10 @@ const storeScoreboards = useScoreboardsStore()
             id="input_type" 
             class="p-2 h-10 w-full md:w-48 border border-gray-300 rounded-lg text-sm bg-white dark:bg-slate-600 dark:border-gray-600 dark:text-gray-200 focus:ring-2 focus:ring-blue-500 focus:outline-none"
             v-model="storeScoreboards.filter">
-            <option value="turns">Turns</option>
-            <option value="time">Total Time</option>
+            <option v-show="storeScoreboards.gameMode == 'singleplayer'" value="turns">Turns</option>
+            <option v-show="storeScoreboards.gameMode == 'singleplayer'" value="time">Total Time</option>
+            <option v-show="storeScoreboards.gameMode == 'multiplayer'" value="wins">Wins</option>
+            <option v-show="storeScoreboards.gameMode == 'multiplayer'" value="losses">Losses</option>
         </select>
     </div>
     

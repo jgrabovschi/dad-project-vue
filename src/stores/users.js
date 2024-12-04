@@ -21,18 +21,21 @@ export const useUsersStore = defineStore('admin', () => {
         errorStore.resetMessages()
         isLoading.value = true
         try {
-            if(searchName.value == ''){
+            if(searchName.value == undefined || searchName.value == '') {
                 const response = await axios.get(`/users`+ '?page=' + currentPage.value)
                 users.value = response.data.data
                 pages.value = response.data.meta.last_page
                 currentPage.value = response.data.meta.current_page
                 totalItems.value = response.data.meta.total
+            }else{
+                console.log(searchName.value)
+                const response = await axios.get(`/users`+ '?page=' + currentPage.value + '&search=' + searchName.value)
+                users.value = response.data.data
+                pages.value = response.data.meta.last_page
+                currentPage.value = response.data.meta.current_page
+                totalItems.value = response.data.meta.total
             }
-            const response = await axios.get(`/users`+ '?page=' + currentPage.value + '&search=' + searchName.value)
-            users.value = response.data.data
-            pages.value = response.data.meta.last_page
-            currentPage.value = response.data.meta.current_page
-            totalItems.value = response.data.meta.total
+            
 
         } catch (e) {
             errorStore.setErrorMessages(e.response.data.message, e.response.data.errors, e.response.status, 'Getting Users Error!')
@@ -89,5 +92,5 @@ export const useUsersStore = defineStore('admin', () => {
 
     
 
-    return {loadUsers, users, pages, currentPage, isLoading, nextPage, previousPage, toPage, totalItems, searchName,  removeUser, toggleBlockUser}
+    return {loadUsers, users, pages, currentPage, isLoading, nextPage, previousPage, toPage, totalItems,  removeUser, toggleBlockUser, searchName}
 })
