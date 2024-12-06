@@ -1,32 +1,31 @@
 <script setup>
-import { ref, computed, onMounted } from 'vue'
+import { onMounted, watch } from 'vue'
 import { Table,TableBody,TableCaption,TableCell,TableHead,TableHeader,TableRow } from "@/components/ui/table"
 import { useAuthStore } from '@/stores/auth'
-import axios from 'axios'
-import { useErrorStore } from '@/stores/error'
-
-const storeError = useErrorStore()
+import { useRoute } from 'vue-router'
+import { useTransactionsStore } from '@/stores/transactions'
 const authStore = useAuthStore()
+const route = useRoute();
+const transactionsStore = useTransactionsStore()
+const params = route.params
 
-const getTransactions = async () =>{
-    storeError.resetMessages();
-    let response;
-    try{
-    if(authStore.userType == 'A'){
-         response = await axios.get('/transactions')
-    } else {
-        response = await axios.get('/transactions/user/' + authStore.user.id)
-    }
-    return response.data
-    }catch(e){
-        storeError.setErrorMessages(e.response.data.message, e.response.data.errors, e.response.status, 'Error Loading the Transactions!')
-    }
+if(params.filter != null){
+    transactionsStore.filter = params.filter
 }
 
+if(params.nickname != null){
+transactionsStore.nickname = params.nickname
+}
+
+watch(() => transactionsStore.isLoading, () => {
+    console.log(transactionsStore.transactions)
+})
+
+onMounted(transactionsStore.loadTransactions);
 </script>
 
 <template>
-    <div class="w-10/12 max-w-5xl mx-auto h-3/4 max-h-screen rounded-lg bg-white flex flex-col shadow-md dark:bg-gray-700 ">
+    <div v-if="transactionsStore.isLoading == false" class="w-10/12 max-w-5xl mx-auto h-3/4 max-h-screen rounded-lg bg-white flex flex-col shadow-md dark:bg-gray-700 ">
         <!-- Header -->
         <p class="mt-8 ms-8 text-xl font-bold dark:text-white">Transactions</p>
         
@@ -36,20 +35,24 @@ const getTransactions = async () =>{
                 <!-- Table Header -->
                 <TableHeader class="h-12">
                     <TableRow >
-                        <TableHead class="w-28 dark:text-slate-200">Datetime</TableHead>
+                        <TableHead class="w-28 dark:text-slate-200">Transaction Date</TableHead>
                         <TableHead v-if="authStore.userType == 'A'" class="w-28 dark:text-slate-200 text-center">User Nickname</TableHead>
                         <TableHead class="text-center dark:text-slate-200">Type</TableHead>
-                        <TableHead class="text-center dark:text-slate-200">Method</TableHead>
-                        <TableHead class="text-center dark:text-slate-200">Amount</TableHead>
+                        <TableHead class="text-center dark:text-slate-200">Cost (In Euros)</TableHead>
+                        <TableHead class="text-center dark:text-slate-200">Payment Method</TableHead>
+                        <TableHead class="text-center dark:text-slate-200">Payment Reference</TableHead>
+                        <TableHead class="text-center dark:text-slate-200">Brain Coins</TableHead>
                     </TableRow>
                 </TableHeader>
                 
                 <!-- Table Body -->
                 <TableBody>
-                    <TableRow class="h-12">
-                        <TableCell class="font-medium dark:text-slate-200">INV001</TableCell>
-                        <TableCell v-if="authStore.userType == 'A'" class="w-28 text-center dark:text-slate-200">User</TableCell>
+                    <TableRow v-for="transaction in transactionsStore.transactions" class="h-12">
+                        <TableCell class="font-medium dark:text-slate-200">{{transaction.transaction_datetime}}</TableCell>
+                        <TableCell v-if="authStore.userType == 'A'" class="w-28 text-center dark:text-slate-200">{{transaction.transaction_datetime}}</TableCell>
                         <TableCell class="text-center dark:text-slate-200">Paid</TableCell>
+                        <TableCell class="text-center dark:text-slate-200">Credit Card</TableCell>
+                        <TableCell class="text-center dark:text-slate-200">$250.00</TableCell>
                         <TableCell class="text-center dark:text-slate-200">Credit Card</TableCell>
                         <TableCell class="text-center dark:text-slate-200">$250.00</TableCell>
                     </TableRow>

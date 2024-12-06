@@ -5,10 +5,9 @@ import { useAuthStore } from '@/stores/auth'
 import axios from 'axios'
 
 export const useTransactionsStore = defineStore('transactions', () => {
-
     const filter = ref("");
-    const selected_user = ref(-1);
-    const isLoading = ref(false);
+    const nickname = ref("");
+    const isLoading = ref(true);
     const transactions = ref([]);
     const storeAuth = useAuthStore();
     const storeError = useErrorStore();
@@ -16,22 +15,29 @@ export const useTransactionsStore = defineStore('transactions', () => {
 
     const loadTransactions = async () => {
         storeError.resetMessages();
-        try {
-            if(filter.value == ""){
-                if(storeAuth.user.userType == "A"){
-                    response = await axios.get('/transactions')
-                }else{
-                    response = await axios.get('/transactions/user/'+ storeAuth.user.id)
-                }
-                transactions.value = response.data
-            } else {
+        let apiUrl = '/transactions';
 
-            const response = await axios.get('/transactions' + filter.value)
-            transactions.value = response.data
-            }
+        if (nickname.value) {
+            apiUrl += '/users/' + nickname.value;
+        }
+        if (filter.value) {
+            apiUrl += '/filter/' + filter.value;
+        }
+
+        try {
+                response = await axios.get(apiUrl)
+                transactions.value = response.data.data
+                isLoading.value = false
         } catch (e) {
             storeError.setErrorMessages(e.response.data.message, e.response.data.errors, e.response.status, 'Error Loading the Transactions!')
         }
     }
 
-})
+    return{
+        filter,
+        nickname,
+        isLoading,
+        transactions,
+        loadTransactions
+    }
+});

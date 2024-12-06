@@ -53,11 +53,28 @@ const router = createRouter({
       path: '/transactions',
       name: 'transactions',
       component: Transactions
-    },{
+    },
+    { 
+      path: '/transactions/type/:type', 
+      name: 'TransactionsByType', 
+      component: Transactions 
+    },
+    { 
+      path: '/transactions/user/:nickname', 
+      name: 'TransactionsByUser', 
+      component: Transactions 
+    },
+    { 
+      path: '/transactions/user/:nickname/type/:type', 
+      name: 'TransactionsByUserAndType', 
+      component: Transactions 
+    },
+    {
       path: '/history',
       name: 'history',
       component: GameHistory,
-    },{
+    },
+    {
       path: '/signup',
       name: 'signup',
       component: Signup,
@@ -81,7 +98,7 @@ const router = createRouter({
       path: '/scoreboard',
       name: 'scoreboard',
       component: ChoosingScoreboards,
-    }
+    },
   ],
 })
 
