@@ -13,6 +13,7 @@ import RemoveAccount from '@/components/RemoveAccount.vue'
 import ChossingGameMode from '@/components/ChossingGameMode.vue'
 import AdminTab from '@/components/admin/AdminTab.vue'
 import ChoosingScoreboards from '@/components/scoreboards/Scoreboards.vue'
+import Statistics from '@/components/stats/Statistics.vue'
 
 
 
@@ -98,6 +99,11 @@ const router = createRouter({
       path: '/scoreboard',
       name: 'scoreboard',
       component: ChoosingScoreboards,
+    },
+    {
+      path: '/stats',
+      name: 'stats',
+      component: Statistics,
     },
   ],
 })

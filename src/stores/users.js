@@ -20,6 +20,7 @@ export const useUsersStore = defineStore('admin', () => {
     const loadUsers = async () => {
         errorStore.resetMessages()
         isLoading.value = true
+        console.log(searchName.value)
         try {
             if(searchName.value == undefined || searchName.value == '') {
                 const response = await axios.get(`/users`+ '?page=' + currentPage.value)

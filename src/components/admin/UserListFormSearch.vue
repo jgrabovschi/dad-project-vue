@@ -8,6 +8,7 @@ const userStore = useUsersStore()
 //const searchName = ref('')
 
 const handleKeyUp = () => {
+  userStore.currentPage = 1
   userStore.loadUsers()
 }
 
@@ -17,7 +18,7 @@ const handleKeyUp = () => {
 
 <template>
     <div class="container mx-auto my-8 p-4">
-      <h1 class="text-2xl font-bold mb-4">Search Users</h1>
+      <h1 class="text-2xl font-bold mb-4 dark:text-white">Search Users</h1>
       <div class="mb-4">
         <input
           type="text"

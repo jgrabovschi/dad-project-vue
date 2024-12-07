@@ -112,8 +112,8 @@ storeScoreboards.clearScores()
           <!-- Right Grid -->
           <div class="grid md:grid-cols-2 gap-4">
               <!-- Personal Singleplayer -->
-              <div class="p-6 text-white rounded-lg shadow-lg cursor-pointer flex flex-col justify-between"
-                    :class="storeAuth.user ? 'bg-purple-400' : 'bg-gray-800 cursor-not-allowed'"
+              <div class="p-6 text-white rounded-lg shadow-lg flex flex-col justify-between"
+                    :class="storeAuth.user ? 'bg-purple-400 cursor-pointer' : 'bg-gray-900 cursor-not-allowed'"
                     @click="storeScoreboards.showSingleplayerPersonal">
                   <h2 class="text-xl font-bold text-center">Personal Singleplayer</h2>
                   <p class="text-sm mt-2 text-center">
@@ -121,8 +121,9 @@ storeScoreboards.clearScores()
                   </p>
               </div>
               <!-- Personal Multiplayer -->
-              <div class="p-6 text-white rounded-lg shadow-lg cursor-pointer flex flex-col justify-between"
-                  :class="storeAuth.user ? 'bg-purple-400' : 'bg-gray-800 cursor-not-allowed'">
+              <div class="p-6 text-white rounded-lg shadow-lg flex flex-col justify-between"
+                  :class="storeAuth.user ? 'bg-purple-400 cursor-pointer' : 'bg-gray-900 cursor-not-allowed'"
+                  @click="storeScoreboards.showMultiplayerPersonal">
                   <h2 class="text-xl font-bold text-center">Personal Multiplayer</h2>
                   <p class="text-sm mt-2 text-center">
                       See your best performances in multiplayer.
@@ -135,37 +136,39 @@ storeScoreboards.clearScores()
         <div v-if="storeScoreboards.isLoading" class="flex justify-center items-center h-32">
             <VueSpinnerPacman size="30" color="gray" />
         </div>
+        <!-- when there's no scores-->
+        <div v-else-if="storeScoreboards.scoreboards.length == 0 && storeScoreboards.showTable" class="m-4 mt-8 text-gray-700 dark:text-white text-lg text-center">
+            You need to play some games to see the scoreboards.
+        </div>
         <!-- when the data has loaded -->
         <div v-else-if="storeScoreboards.showTable">
           <!-- a simple filter -->
           <ScoreBoardsFilter class="m-4 mt-8"></ScoreBoardsFilter>
           <Table class="w-full md:w-2/3 mx-auto mb-8 mt-6">
+            <!-- This table changes its cells acording to the filters and the score that was chosen -->
             <TableHeader>
               <TableRow>
-                <TableHead class="dark:text-white text-xs md:text-sm">Board type</TableHead>
+                <TableHead v-if="storeScoreboards.gameMode == 'singleplayer' || storeScoreboards.isPersonal" class="dark:text-white text-xs md:text-sm">Board type</TableHead>
                 <TableHead v-if="!storeScoreboards.isPersonal" class="dark:text-white text-xs md:text-sm">Nickname</TableHead>
                 <TableHead v-if="storeScoreboards.gameMode == 'singleplayer'" class="dark:text-white text-xs md:text-sm">Score</TableHead>
-                <TableHead v-else class="dark:text-white text-xs md:text-sm">{{ storeScoreboards.filter == 'wins' ? 'Wins' : 'Losses' }}</TableHead>
+                <TableHead v-if="storeScoreboards.gameMode == 'multiplayer'" class="dark:text-white text-xs md:text-sm">{{ storeScoreboards.filter == 'wins' ? 'Wins' : 'Losses' }}</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               <TableRow v-for="score in storeScoreboards.scoreboards">
-                <TableCell class="dark:text-slate-300 text-xs md:text-sm items-center">{{ score.board }}</TableCell>
+                <TableCell v-if="storeScoreboards.gameMode == 'singleplayer' || storeScoreboards.isPersonal"class="dark:text-slate-300 text-xs md:text-sm items-center">{{ score.board }}</TableCell>
                 <TableCell v-if="!storeScoreboards.isPersonal" class="dark:text-slate-300 text-xs md:text-sm items-center">{{ score.user }}</TableCell>
                 <TableCell v-if="storeScoreboards.gameMode == 'singleplayer'" class="dark:text-slate-300 text-xs md:text-sm items-center">
                   {{ storeScoreboards.filter == 'turns' ? Number(score.performance).toFixed(0) +  ' turns' : score.performance + ' seconds' }}
                 </TableCell>
-                <TableCell v-else class="dark:text-slate-300 text-xs md:text-sm items-center">
-                  {{ score.performance }} 
+                <TableCell v-if="storeScoreboards.gameMode == 'multiplayer'" class="dark:text-slate-300 text-xs md:text-sm items-center">
+                  {{ score.games }} 
                 </TableCell>
               </TableRow>
             </TableBody>
           </Table>
         </div>
-        <!-- when there's no scores-->
-        <div v-else-if="storeScoreboards.scoreboards.length == 0 && storeScoreboards.showTable" class="m-4 mt-8 text-gray-700 dark:text-white text-lg text-center">
-            You need to play some games to see the scoreboards.
-        </div>
+
       </CardContent>
     </Card>
   </div>    
