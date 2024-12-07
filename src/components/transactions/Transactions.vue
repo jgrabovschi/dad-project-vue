@@ -26,6 +26,9 @@ onMounted(transactionsStore.loadTransactions);
 
 <template>
     <div v-if="transactionsStore.isLoading == false" class="w-10/12 max-w-5xl mx-auto h-3/4 max-h-screen rounded-lg bg-white flex flex-col shadow-md dark:bg-gray-700 ">
+        <VueSpinnerPacman size="30" color="gray" />
+    </div>
+    <div v-if="transactionsStore.isLoading == false" class="w-10/12 max-w-5xl mx-auto h-3/4 max-h-screen rounded-lg bg-white flex flex-col shadow-md dark:bg-gray-700 ">
         <!-- Header -->
         <p class="mt-8 ms-8 text-xl font-bold dark:text-white">Transactions</p>
         
