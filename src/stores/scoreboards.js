@@ -29,8 +29,8 @@ export const useScoreboardsStore = defineStore('scoreboards', () => {
                 return response
             })
             scoreboards.value = response.data
-            // the multiplayer scoreboard is a bit different from the singleplayer scoreboard
-            if (gameMode.value === 'multiplayer') {
+            // the global multiplayer scoreboard is a bit different from the rest
+            if (gameMode.value === 'multiplayer' && !isPersonal.value) {
                 boards.value = scoreboards.value.map(score => score.board)
                 originalScoreboards.value = scoreboards.value
                 filterMultiplayer.value = boards.value[0]
@@ -64,6 +64,13 @@ export const useScoreboardsStore = defineStore('scoreboards', () => {
         loadScores()
     }
 
+    const showMultiplayerPersonal = () => {
+        isPersonal.value = true
+        filter.value = 'wins'
+        gameMode.value = 'multiplayer'
+        loadScores()
+    }
+
     const clearScores = () => {
         showTable.value = false
         scoreboards.value = []
@@ -82,6 +89,6 @@ export const useScoreboardsStore = defineStore('scoreboards', () => {
     })
 
    
-  return { loadScores, showSingleplayerGlobal, showSingleplayerPersonal, clearScores, showMultiplayerGlobal,
+  return { loadScores, showSingleplayerGlobal, showSingleplayerPersonal, clearScores, showMultiplayerGlobal, showMultiplayerPersonal,
      showTable, scoreboards, filter, isLoading, isPersonal, gameMode, filterMultiplayer, boards }
 })
