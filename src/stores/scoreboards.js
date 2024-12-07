@@ -13,8 +13,12 @@ export const useScoreboardsStore = defineStore('scoreboards', () => {
     const showTable = ref(false)
     const isPersonal = ref(false)
     const gameMode = ref('')
+    const filterMultiplayer = ref('')
+    const originalScoreboards = ref([])
+    const boards = ref([])
 
     const loadScores = async () => {
+        clearScores()
         storeError.resetMessages()
         isLoading.value = true
         try {
@@ -25,6 +29,14 @@ export const useScoreboardsStore = defineStore('scoreboards', () => {
                 return response
             })
             scoreboards.value = response.data
+            // the multiplayer scoreboard is a bit different from the singleplayer scoreboard
+            if (gameMode.value === 'multiplayer') {
+                boards.value = scoreboards.value.map(score => score.board)
+                originalScoreboards.value = scoreboards.value
+                filterMultiplayer.value = boards.value[0]
+                scoreboards.value = originalScoreboards.value.filter(score => score.board === filterMultiplayer.value)
+                scoreboards.value = scoreboards.value[0].players
+            }
 
         } catch (e) {loadScores()
             storeError.setErrorMessages(e.response.data.message, e.response.data.errors, e.response.status, 'Getting Games Error!')
@@ -57,12 +69,19 @@ export const useScoreboardsStore = defineStore('scoreboards', () => {
         scoreboards.value = []
     }
 
+    //reloads scores after changing the filter
     watch(filter, () => {
         loadScores()
     })
 
+    //this one only applies the filter locally
+    watch(filterMultiplayer, () => {
+        scoreboards.value = originalScoreboards.value.filter(score => score.board === filterMultiplayer.value)
+        //after filtering the boards, we get the players for a board
+        scoreboards.value = scoreboards.value[0].players
+    })
 
    
   return { loadScores, showSingleplayerGlobal, showSingleplayerPersonal, clearScores, showMultiplayerGlobal,
-     showTable, scoreboards, filter, isLoading, isPersonal, gameMode }
+     showTable, scoreboards, filter, isLoading, isPersonal, gameMode, filterMultiplayer, boards }
 })
