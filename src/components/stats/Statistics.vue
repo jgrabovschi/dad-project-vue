@@ -18,7 +18,7 @@ const isLoading = ref(false)
             </CardHeader>
             <CardContent>
                 <div class="overflow-x-auto">
-                    <Tabs default-value="general" class="w-[400px]">
+                    <Tabs default-value="general">
                         <TabsList class="dark:bg-slate-600 dark:text-slate-300">
                             <TabsTrigger value="general">
                                 General
