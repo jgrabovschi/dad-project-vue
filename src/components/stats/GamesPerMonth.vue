@@ -27,7 +27,7 @@ const options = ref({
         backgroundColor: isDarkMode.value ? "#1f2937" : "#fff",  // Background color based on dark mode
       },
       title: {
-        text: "Games Played by Month",
+        text: "Multiplayer Games Played by Month",
         style: {
           color: isDarkMode.value ? "#fff" : "#000",  // Title color
         },
