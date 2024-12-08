@@ -6,11 +6,14 @@ import { useAuthStore } from '@/stores/auth'
 import { provide, useTemplateRef } from 'vue'
 import GlobalAlertDialog from '@/components/common/GlobalAlertDialog.vue'
 import Toaster from '@/components/ui/toast/Toaster.vue'
+import GameAlert from '@/components/common/GameAlert.vue'
 
 const storeAuth = useAuthStore()
 
 const alertDialog = useTemplateRef('alert-dialog')
 provide('alertDialog', alertDialog)
+const gameAlert = useTemplateRef('game-alert')
+provide('gameAlert', gameAlert)
 
 const logout = () => {
   alertDialog.value.open(logoutConfirmed, 'Logout confirmation?', 'Cancel', `Yes, I want to log out`,
@@ -25,6 +28,7 @@ const logoutConfirmed = () => {
 <template>
    <Toaster />
    <GlobalAlertDialog ref="alert-dialog"></GlobalAlertDialog>
+   <GameAlert ref="game-alert"></GameAlert>
     <nav class="fixed top-0 z-50 w-full bg-white border-b border-gray-200 dark:bg-gray-800 dark:border-gray-700">
       <div class="px-3 py-3 lg:px-5 lg:pl-3">
         <div class="flex items-center justify-between">
