@@ -23,7 +23,7 @@ const props = defineProps({
 
 const options = ref({
     chart: {
-        type: "column",
+        type: "line",
         backgroundColor: isDarkMode.value ? "#1f2937" : "#fff",  // Background color based on dark mode
       },
       title: {
