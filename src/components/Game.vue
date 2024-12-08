@@ -5,11 +5,11 @@ import { inject } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import {  } from 'vue-router'
 import { Card as CardComponent } from '@/components/ui/card'
-import { useStopwatch } from 'vue-timer-hook';
 import { useMemoryGame } from '../composables/memoryGame.js'
 import { useAuthStore } from '@/stores/auth'
 import { useErrorStore } from '@/stores/error'
 import axios from 'axios';
+//import { useStopwatch } from 'vue-timer-hook';
 
 
 const storeAuth = useAuthStore()
@@ -83,7 +83,6 @@ const {
     startGame
 } = useMemoryGame(board_rows.value, board_cols.value)
 
-const alertDialog = inject('alertDialog')
 const gameAlert = inject('gameAlert') 
 //isto provalmente vai para dentro do composoble
 
@@ -141,54 +140,34 @@ startGame(board_rows.value , board_cols.value)
 
 console.log(cardsImages.value)
 
-const autoStart = true;
-const stopwatch = useStopwatch(autoStart);
-
-const showSeconds = computed(() => {
-  return stopwatch.seconds.value + ( 60 * stopwatch.minutes.value);
-})
-
 start()
 
 
 watch(gameWon, (newValue, oldValue) => {
   if (newValue === true) {
     stop()
-    stopwatch.pause()
-    /*alertDialog.value.open( 
-      goToGamehistory,  
-        'Are you sure?', 'Cancel', `Yes, delete task #` + showSeconds.value, 
-        `This action cannot be undone. This will permanently delete the task 
-        " from our servers.`) */
     gameAlert.value.open(
       goToGamehistory,  
         'Congratulations!', 
         `You Cleared The board in ${formattedTime.value} and in xx turns.
-        You will be redirected to game mode page in 5 seconds. You can see the stats of your game in the game history`
+        You will be redirected to game mode page in approximately 5 seconds. You can see the stats of your game in the game history`
     )
 
     if(storeAuth.user != null){
       try {
-        /*const payload = {
-        created_user_id: storeAuth.user.id,
-        type: 'S',
-        board_id: board.id,
-        status: 'E'
-        };*/
         const payload = {
-        status: 'E'
+          status: 'E',
+          total_time: formattedTime.value
         };
         console.log(game_id.value)
         const response = axios.put(`/games/${game_id.value}`,payload)
         .then((response) => {
-            //console.log(response.data.data)
-            //fazer update das coins visualmente
+            //isto é um sleep
+          new Promise(r => setTimeout(r, 5000))
+          .then(() =>{
             gameAlert.value.dissapearAlert()
             router.push({ name: 'gameMode'})
-            /* fazer aqui o depois
-            
-            isLoading.value = false
-            return response*/
+          })
         });
 
     } catch (e) {
@@ -202,18 +181,13 @@ watch(gameWon, (newValue, oldValue) => {
 console.log(gameInterrupted.value)
 watch(gameInterrupted, (newValue, oldValue) => {
   if (newValue === true) {
-    stopwatch.pause()
     stop()
-    /*alertDialog.value.open( 
-      goToGamehistory,  
-        'Are you sure?', 'Cancel', `Yes, delete task #` + showSeconds.value, 
-        `PARASTE DE JOGAR WTF MATE 
-        " from our servers.`)*/
     gameAlert.value.open(
       goToGamehistory,  
         'Stop the playing', 
         `You didnt make a move in 20 seconds your game will be interrupted
-        Next time PLAY THE FUCKING GAME YOU BEATIFULL PERSON`
+        Next time PLAY THE FUCKING GAME YOU BEATIFULL PERSON. You will be
+        redirect to the gameMode menu in approximately 5 seconds`
     )
 
     if(storeAuth.user != null){
@@ -225,19 +199,20 @@ watch(gameInterrupted, (newValue, oldValue) => {
         status: 'E'
         };*/
         const payload = {
-        status: 'I'
+          status: 'I',
+          total_time: formattedTime.value
         };
         console.log(game_id.value)
         const response = axios.put(`/games/${game_id.value}`, payload)
         .then((response) => {
-            //console.log(response.data.data)
-            //fazer update das coins visualmente
+            
+          //isto é um sleep
+          new Promise(r => setTimeout(r, 5000))
+          .then(() =>{
             gameAlert.value.dissapearAlert()
             router.push({ name: 'gameMode'})
-            /* fazer aqui o depois
-       
-            isLoading.value = false
-            return response*/
+          })
+            
         });
 
       } catch (e) {
@@ -254,18 +229,10 @@ watch(gameInterrupted, (newValue, oldValue) => {
 </script>
 
 <template>
-  <Alert v-if="gameWon || gameInterrupted">
-    <Terminal class="h-4 w-4" />
-    <AlertTitle>Heads up!</AlertTitle>
-    <AlertDescription>
-      You can add components to your app using the cli.
-    </AlertDescription>
-  </Alert>
   <div class="flex justify-center items-center p-4">
     <CardComponent class="max-w-6xl h-auto rounded-lg bg-white dark:bg-gray-800 border-0 shadow-md p-4">
       <div class="text-center">
           <p class="text-black dark:text-white mb-4 text-xl">Game</p>
-          <p class="text-black dark:text-white mb-4 text-xl">{{ showSeconds }}</p>
           <p class="text-black dark:text-white mb-4 text-xl">{{ formattedTime }}</p>
           <div class="flex items-center gap-2">
               <!-- Iterate over rows -->
