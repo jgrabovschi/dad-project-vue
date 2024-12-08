@@ -1,4 +1,4 @@
-import { ref, computed } from 'vue'
+import { ref, computed, inject } from 'vue'
 import { defineStore } from 'pinia'
 import axios from 'axios'
 import { useErrorStore } from '@/stores/error'
@@ -12,6 +12,7 @@ import { useToast } from '@/components/ui/toast/use-toast'
 export const useAuthStore = defineStore('auth', () => {
     const router = useRouter()
     const storeError = useErrorStore()
+    const socket = inject('socket')
 
     const { toast } = useToast()
     const user = ref(null)
@@ -63,6 +64,9 @@ export const useAuthStore = defineStore('auth', () => {
     // This function is "private" - not exported by the store
     const clearUser = () => {
         resetIntervalToRefreshToken()
+        if (user.value) {
+            socket.emit('logout', user.value)
+        }     
         user.value = null
         token.value = ''
         localStorage.removeItem('token')
@@ -90,6 +94,7 @@ export const useAuthStore = defineStore('auth', () => {
             axios.defaults.headers.common.Authorization = 'Bearer ' + token.value
             const responseUser = await axios.get('users/me')
             user.value = responseUser.data.data
+            socket.emit('login', user.value)
             repeatRefreshToken()
             router.push({ name:'game' })
             return user.value
@@ -156,6 +161,7 @@ export const useAuthStore = defineStore('auth', () => {
                     axios.defaults.headers.common.Authorization = 'Bearer ' + token.value
                     const responseUser = await axios.get('users/me')
                     user.value = responseUser.data.data
+                    socket.emit('login', user.value)
                     repeatRefreshToken()
                     return true
                 } catch {
@@ -411,10 +417,18 @@ export const useAuthStore = defineStore('auth', () => {
         const isAdmin = () => {
             return user.value && userType.value === 'A'
         }
+
+        const getFirstLastName = (fullName) => {
+            const names = fullName.trim().split(' ')
+            const firstName = names[0] ?? ''
+            const lastName = names.length > 1 ? names[names.length -1 ] : ''
+            return (firstName + ' ' + lastName).trim()
+        }
     
 
     return {
         user, userName, userFirstLastName, userEmail, userType, userGender, userPhotoUrl, gamesWon, nickname, balance,
-        login, logout, restoreToken, canUpdateDeleteProject, signup, updateProfile, validatePassword, updateProfilePassword, removeAccount, canDeleteOwnAccount, isAdmin
+        login, logout, restoreToken, canUpdateDeleteProject, signup, updateProfile, validatePassword, updateProfilePassword, removeAccount, canDeleteOwnAccount, isAdmin,
+        getFirstLastName
     }
 })

@@ -20,7 +20,7 @@ console.log('ws connection', wsConnection)
 axios.defaults.baseURL = `http://${apiDomain}/api`
 axios.defaults.withCredentials = true
 
-//app.provide('socket', io(wsConnection))
+app.provide('socket', io(wsConnection))
 
 app.provide('serverBaseUrl', apiDomain)
 
