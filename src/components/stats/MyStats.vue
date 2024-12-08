@@ -1,21 +1,22 @@
 <script setup>
-import axios from 'axios';
+import { useAuthStore } from '@/stores/auth';
 import { VueSpinnerPacman } from 'vue3-spinners';
-import { useErrorStore } from '@/stores/error';
 import { ref } from 'vue';
-import GamesPerMonth from './GamesPerMonth.vue';
+import axios from 'axios';
+import WinsPerMonth from './WinsPerMonth.vue';
+import { useErrorStore } from '@/stores/error';
 
+const isLoading = ref(true)
 const errorStore = useErrorStore()
 const stats = ref(null)
-const isLoading = ref(true)
 
-axios.get(axios.defaults.baseURL + '/stats')
+axios.get(axios.defaults.baseURL + '/stats/my')
     .then(response => {
         stats.value = response.data
         isLoading.value = false
     })
     .catch(() => {
-        errorStore.setErrorMessages('Could not provide the general statistics.')
+        errorStore.setErrorMessages('Could not provide your statistics.')
     })
 
 </script>
@@ -25,11 +26,7 @@ axios.get(axios.defaults.baseURL + '/stats')
         <VueSpinnerPacman size="30" color="gray" />
     </div>
     <div v-else class="space-y-2 m-4">
-        <p class="text-slate-700 dark:text-slate-300 m-4">The following information is about all the users on the platform</p>
-        <div class="flex justify-between items-center">
-            <span class="font-semibold dark:text-slate-100">Total Games Registered:</span>
-            <span class="dark:text-slate-300">{{ stats.games_registered }}</span>
-        </div>
+        <p class="text-slate-700 dark:text-slate-300 m-4">The following information is about all your stats on the platform.</p>
         <div class="flex justify-between items-center">
             <span class="font-semibold dark:text-slate-100">Total Games Played:</span>
             <span class="dark:text-slate-300">{{ stats.games_played }}</span>
@@ -43,15 +40,20 @@ axios.get(axios.defaults.baseURL + '/stats')
             <span class="dark:text-slate-300">{{ stats.multiplayer_games_played }}</span>
         </div>
         <div class="flex justify-between items-center">
-            <span class="font-semibold dark:text-slate-100">Total Users:</span>
-            <span class="dark:text-slate-300">{{ stats.users }}</span>
+            <span class="font-semibold dark:text-slate-100">Total Transactions:</span>
+            <span class="dark:text-slate-300">{{ stats.transactions }}</span>
         </div>
         <div class="flex justify-between items-center">
-            <span class="font-semibold dark:text-slate-100">Total Boards:</span>
-            <span class="dark:text-slate-300">{{ stats.boards }}</span>
+            <span class="font-semibold dark:text-slate-100">Total Euro Spent (€):</span>
+            <span class="dark:text-slate-300">{{ stats.total_euro_spent }}</span>
+
+        </div>
+        <div class="flex justify-between items-center">
+            <span class="font-semibold dark:text-slate-100">Total Balance:</span>
+            <span class="dark:text-slate-300">{{ stats.brain_coins_balance }}</span>
         </div>
         <div>
-            <GamesPerMonth :stats="stats.games_per_month"/>
+            <WinsPerMonth :stats="stats"/>
         </div>
     </div>
 </template>

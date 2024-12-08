@@ -4,9 +4,10 @@ import { CardHeader, CardTitle, CardDescription, CardContent } from '@/component
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { ref } from 'vue'
 import GeneralStatistics from './GeneralStatistics.vue';
+import { useAuthStore } from '@/stores/auth';
+import MyStats from './MyStats.vue';
 
-const stats = ref(null)
-const isLoading = ref(false)
+const authStore = useAuthStore()
 
 </script>
 <template>
@@ -23,14 +24,22 @@ const isLoading = ref(false)
                             <TabsTrigger value="general">
                                 General
                             </TabsTrigger>
-                            <TabsTrigger value="password">
-                                Password
+                            <!-- Only show the following tab if the user is authenticated -->
+                            <TabsTrigger v-if="authStore.user" value="mystats">
+                                My Stats
+                            </TabsTrigger>
+                            <!-- Only show the following tab if the user is an admin -->
+                            <TabsTrigger v-if="authStore.isAdmin()" value="business">
+                                Business
                             </TabsTrigger>
                         </TabsList>
                         <TabsContent value="general">
                             <GeneralStatistics />
                         </TabsContent>
-                        <TabsContent value="password">
+                        <TabsContent value="mystats">
+                            <MyStats />
+                        </TabsContent>
+                        <TabsContent value="business">
                             Change your password here.
                         </TabsContent>
                     </Tabs>
