@@ -14,6 +14,8 @@ import ChossingGameMode from '@/components/ChossingGameMode.vue'
 import AdminTab from '@/components/admin/AdminTab.vue'
 import ChoosingScoreboards from '@/components/scoreboards/Scoreboards.vue'
 import Statistics from '@/components/stats/Statistics.vue'
+import MultiplayerGames from '@/components/multiplayer/MultiplayerGames.vue'
+
 
 
 
@@ -104,6 +106,11 @@ const router = createRouter({
       path: '/stats',
       name: 'stats',
       component: Statistics,
+    },
+    {
+      path: '/multiplayerGames',
+      name: 'multiplayerGames',
+      component: MultiplayerGames,
     },
   ],
 })

@@ -5,11 +5,11 @@ import { inject } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import {  } from 'vue-router'
 import { Card as CardComponent } from '@/components/ui/card'
-import { useStopwatch } from 'vue-timer-hook';
 import { useMemoryGame } from '../composables/memoryGame.js'
 import { useAuthStore } from '@/stores/auth'
 import { useErrorStore } from '@/stores/error'
 import axios from 'axios';
+//import { useStopwatch } from 'vue-timer-hook';
 
 
 const storeAuth = useAuthStore()
@@ -23,10 +23,46 @@ const board_cols = ref(null);
 const board_rows = ref(null);
 const lastMoveDone = ref(0);
 
+//STOPWATCH SHITTTTTTTTTTTTTTTTTTTTTTTTTTTTT
+
+
+const startTime = ref(null); // When the stopwatch starts
+const elapsedTime = ref(0); // Elapsed time in milliseconds
+const isRunning = ref(false);
+let intervalId = null;
+
+// Compute formatted time
+const formattedTime = computed(() => {
+      const totalSeconds = elapsedTime.value / 1000; // Convert milliseconds to seconds
+      return totalSeconds.toFixed(2); // Keep 3 decimal places for milliseconds
+  });
+
+// Start the stopwatch
+const start = () => {
+  if (!isRunning.value) {
+    isRunning.value = true;
+    startTime.value = Date.now() - elapsedTime.value; // Account for paused time
+    intervalId = setInterval(updateElapsedTime, 10);
+  }
+};
+
+// Update the elapsed time
+const updateElapsedTime = () => {
+  elapsedTime.value = Date.now() - startTime.value;
+};
+
+// Stop the stopwatch
+const stop = () => {
+  isRunning.value = false;
+  clearInterval(intervalId);
+};
+
+//STOP WATCH SHIT STOPS NOWWWWWWWWWWWWWWWWWWWWWWWWW
+
 
 const gameInterrupted = computed(() => {
 
-        return (showSeconds.value - lastMoveDone.value) >= 20 
+        return (formattedTime.value - lastMoveDone.value) >= 20 
 })
 
 game_id.value = route.query?.game_id ?? null;
@@ -47,7 +83,7 @@ const {
     startGame
 } = useMemoryGame(board_rows.value, board_cols.value)
 
-const alertDialog = inject('alertDialog') 
+const gameAlert = inject('gameAlert') 
 //isto provalmente vai para dentro do composoble
 
 const isMyTurn = ref(true);
@@ -55,6 +91,7 @@ const isMyTurn = ref(true);
 let flippedPair = []
 
 const resetTurn = () =>{
+    lastMoveDone.value = formattedTime.value;
     isMyTurn.value = true;
 }
 
@@ -63,8 +100,6 @@ const flipCard = (card) => {
     if(!isMyTurn.value || card.matched || card.flipped){
       return;
     }
-
-    lastMoveDone.value = showSeconds.value;
 
     card.flipped = !card.flipped
 
@@ -92,9 +127,12 @@ const flipCard = (card) => {
         }
         
     }
+    lastMoveDone.value = formattedTime.value;
 }
 
 const goToGamehistory = () =>{
+    
+  gameAlert.value.dissapearAlert()
   router.push('myprofile')
 }
 
@@ -102,45 +140,34 @@ startGame(board_rows.value , board_cols.value)
 
 console.log(cardsImages.value)
 
-const autoStart = true;
-const stopwatch = useStopwatch(autoStart);
-
-const showSeconds = computed(() => {
-  return stopwatch.seconds.value + ( 60 * stopwatch.minutes.value);
-})
-
+start()
 
 
 watch(gameWon, (newValue, oldValue) => {
   if (newValue === true) {
-    stopwatch.pause()
-    alertDialog.value.open( 
+    stop()
+    gameAlert.value.open(
       goToGamehistory,  
-        'Are you sure?', 'Cancel', `Yes, delete task #` + showSeconds.value, 
-        `This action cannot be undone. This will permanently delete the task 
-        " from our servers.`) 
+        'Congratulations!', 
+        `You Cleared The board in ${formattedTime.value} and in xx turns.
+        You will be redirected to game mode page in approximately 5 seconds. You can see the stats of your game in the game history`
+    )
 
     if(storeAuth.user != null){
       try {
-        /*const payload = {
-        created_user_id: storeAuth.user.id,
-        type: 'S',
-        board_id: board.id,
-        status: 'E'
-        };*/
         const payload = {
-        status: 'E'
+          status: 'E',
+          total_time: formattedTime.value
         };
         console.log(game_id.value)
-        const response = axios.put(`/games/${game_id.value}`,payload)
+        const response = axios.put(`/games/${game_id.value}`, payload)
         .then((response) => {
-            //console.log(response.data.data)
-            //fazer update das coins visualmente
+            //isto é um sleep
+          new Promise(r => setTimeout(r, 5000))
+          .then(() =>{
+            gameAlert.value.dissapearAlert()
             router.push({ name: 'gameMode'})
-            /* fazer aqui o depois
-            
-            isLoading.value = false
-            return response*/
+          })
         });
 
     } catch (e) {
@@ -154,12 +181,14 @@ watch(gameWon, (newValue, oldValue) => {
 console.log(gameInterrupted.value)
 watch(gameInterrupted, (newValue, oldValue) => {
   if (newValue === true) {
-    stopwatch.pause()
-    alertDialog.value.open( 
+    stop()
+    gameAlert.value.open(
       goToGamehistory,  
-        'Are you sure?', 'Cancel', `Yes, delete task #` + showSeconds.value, 
-        `PARASTE DE JOGAR WTF MATE 
-        " from our servers.`) 
+        'Stop the playing', 
+        `You didnt make a move in 20 seconds your game will be interrupted
+        Next time PLAY THE FUCKING GAME YOU BEATIFULL PERSON. You will be
+        redirect to the gameMode menu in approximately 5 seconds`
+    )
 
     if(storeAuth.user != null){
       try {
@@ -170,18 +199,20 @@ watch(gameInterrupted, (newValue, oldValue) => {
         status: 'E'
         };*/
         const payload = {
-        status: 'I'
+          status: 'I',
+          total_time: formattedTime.value
         };
         console.log(game_id.value)
         const response = axios.put(`/games/${game_id.value}`, payload)
         .then((response) => {
-            //console.log(response.data.data)
-            //fazer update das coins visualmente
+            
+          //isto é um sleep
+          new Promise(r => setTimeout(r, 5000))
+          .then(() =>{
+            gameAlert.value.dissapearAlert()
             router.push({ name: 'gameMode'})
-            /* fazer aqui o depois
-       
-            isLoading.value = false
-            return response*/
+          })
+            
         });
 
       } catch (e) {
@@ -202,7 +233,7 @@ watch(gameInterrupted, (newValue, oldValue) => {
     <CardComponent class="max-w-6xl h-auto rounded-lg bg-white dark:bg-gray-800 border-0 shadow-md p-4">
       <div class="text-center">
           <p class="text-black dark:text-white mb-4 text-xl">Game</p>
-          <p class="text-black dark:text-white mb-4 text-xl">{{ showSeconds }}</p>
+          <p class="text-black dark:text-white mb-4 text-xl">{{ formattedTime }}</p>
           <div class="flex items-center gap-2">
               <!-- Iterate over rows -->
               <div 
