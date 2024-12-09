@@ -29,7 +29,7 @@ axios.get(axios.defaults.baseURL + '/stats/my')
         <p class="text-slate-700 dark:text-slate-300 m-4">The following information is about all your stats on the platform.</p>
         <div class="flex justify-between items-center">
             <span class="font-semibold dark:text-slate-100">Total Games Played:</span>
-            <span class="dark:text-slate-300">{{ stats.games_played }}</span>
+            <span class="dark:text-slate-300">{{ stats.singleplayer_games_played + stats.multiplayer_games_played }}</span>
         </div>
         <div class="flex justify-between items-center">
             <span class="font-semibold dark:text-slate-100">Total Singleplayer Games:</span>
@@ -49,7 +49,7 @@ axios.get(axios.defaults.baseURL + '/stats/my')
 
         </div>
         <div class="flex justify-between items-center">
-            <span class="font-semibold dark:text-slate-100">Total Balance:</span>
+            <span class="font-semibold dark:text-slate-100">Total Balance (Brain Coins):</span>
             <span class="dark:text-slate-300">{{ stats.brain_coins_balance }}</span>
         </div>
         <div>

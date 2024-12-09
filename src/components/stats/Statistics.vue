@@ -31,7 +31,7 @@ const authStore = useAuthStore()
                             </TabsTrigger>
                             <!-- Only show the following tab if the user is an admin -->
                             <TabsTrigger v-if="authStore.isAdmin()" value="business">
-                                Business
+                                Admin
                             </TabsTrigger>
                         </TabsList>
                         <TabsContent value="general">

@@ -18,36 +18,23 @@ const isDarkMode = computed(() => window.matchMedia && window.matchMedia("(prefe
 
 
 const props = defineProps({
-    stats: Object,
+    stats: Array,
 })
-
-const getAllMonths = (wins, losses) => {
-    const allMonths = new Set();
-
-    wins.forEach(item => {
-      allMonths.add(item.month + '/' + item.year);
-    });
-    losses.forEach(item => {
-      allMonths.add(item.month + '/' + item.year);
-    });
-
-    return Array.from(allMonths);
-  }
-
 
 const options = ref({
     chart: {
-        type: "column",
+        type: "line",
         backgroundColor: isDarkMode.value ? "#1f2937" : "#fff",  // Background color based on dark mode
       },
+      
       title: {
-        text: "Multplayer Games Played by Month",
+        text: "Revenue by Month",
         style: {
           color: isDarkMode.value ? "#fff" : "#000",  // Title color
         },
       },
       xAxis: {
-        categories: getAllMonths(props.stats.wins_per_month, props.stats.losses_per_month),
+        categories: props.stats.map((item) => item.month + '/' + item.year),
         labels: {
           style: {
             color: isDarkMode.value ? "#fff" : "#000",  // Axis label color
@@ -57,7 +44,7 @@ const options = ref({
       },
       yAxis: {
         title: {
-          text: "Total Games",
+          text: "Euro (€)",
           style: {
             color: isDarkMode.value ? "#fff" : "#000",  // Y-Axis title color
           },
@@ -72,14 +59,9 @@ const options = ref({
       },
       series: [
         {
-          name: "Wins",
-          data: props.stats.wins_per_month.map((item) => item.total_wins),
+          name: "Revenue",
+          data: props.stats.map((item) => parseFloat(item.total_revenue)),
           color: isDarkMode.value ? "#00bcd4" : "#2196f3",  // Series color for dark mode
-        },
-        {
-          name: "Losses",
-          data: props.stats.losses_per_month.map((item) => item.total_losses),
-          color: "red",  // Series color for dark mode
         },
       ],
       tooltip: {
@@ -88,13 +70,20 @@ const options = ref({
           color: isDarkMode.value ? "#fff" : "#000",  // Tooltip text color
         },
       },
+      plotOptions: {
+        line: {
+            dataLabels: {
+                enabled: true
+            },
+            enableMouseTracking: false
+        }
+    },
     })
 </script>
 
 <template>
-    <p v-if="stats.wins_per_month.length == 0 && stats.losses_per_month.length == 0" 
-            class="dark:text-white m-6 text-center">
-        No data about wins and losses avaible to show in a graph.
+    <p v-if="stats.length == 0" class="dark:text-white text-center">
+            No games registered on the platform yet.
     </p>
     <Chart v-else :options="options" />
 </template>

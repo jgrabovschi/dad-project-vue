@@ -23,11 +23,11 @@ const props = defineProps({
 
 const options = ref({
     chart: {
-        type: "line",
+        type: "area",
         backgroundColor: isDarkMode.value ? "#1f2937" : "#fff",  // Background color based on dark mode
       },
       title: {
-        text: "Multiplayer Games Played by Month",
+        text: "Games Played by Month",
         style: {
           color: isDarkMode.value ? "#fff" : "#000",  // Title color
         },
