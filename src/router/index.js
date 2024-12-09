@@ -61,12 +61,12 @@ const router = createRouter({
       component: Transactions 
     },
     { 
-      path: '/transactions/user/:nickname', 
+      path: '/transactions/users/:nickname', 
       name: 'TransactionsByUser', 
       component: Transactions 
     },
     { 
-      path: '/transactions/user/:nickname/type/:type', 
+      path: '/transactions/users/:nickname/type/:type', 
       name: 'TransactionsByUserAndType', 
       component: Transactions 
     },
@@ -121,13 +121,39 @@ router.beforeEach(async (to, from, next) => {
       next({ name: 'login' })
       return
     }
+
     // // routes "updateTask" and "updateProject" are only accessible when user is logged in
     // if (((to.name == 'updateTask') || (to.name == 'updateProject')) && (!storeAuth.user)) {
     //     next({ name: 'login' })
     //     return
     // }
     // all other routes are accessible to everyone, including anonymous users
-    next()
+    
+    if(to.name == "transactions" && (storeAuth.user == null)){
+      next({name: 'login'})
+      return
+    } 
+
+    if(to.name == "TransactionsByType" && (storeAuth.user == null)){
+      next({name: 'login'})
+      return
+    } 
+    if(to.name == "TransactionsByUser" && (storeAuth.user == null) || (to.name == "TransactionsByUser" && (to.params.nickname != storeAuth.user.nickname) && (storeAuth.userType != "A"))){
+      next({name: 'login'})
+      return
+    } 
+
+    if(to.name == "TransactionsByUserAndType" && (storeAuth.user == null) || (to.name == "TransactionsByUser" && (to.params.nickname != storeAuth.user.nickname) && (storeAuth.userType != "A"))){
+      next({name: 'login'})
+      return
+    } 
+    
+    if(to.name == "transactions" && (storeAuth.userType != "A")) 
+      {
+        next({name: 'TransactionsByUser', params: { nickname: storeAuth.user.nickname }})
+        return
+      }
+      next()
 })
 
 export default router

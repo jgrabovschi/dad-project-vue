@@ -5,6 +5,7 @@ import { useErrorStore } from '@/stores/error'
 import { useRouter } from 'vue-router'
 import avatarNoneAssetURL from '@/assets/avatar_none.jpg'
 import { useToast } from '@/components/ui/toast/use-toast'
+import { useTransactionsStore } from '@/stores/transactions'
 
 
 
@@ -12,6 +13,7 @@ import { useToast } from '@/components/ui/toast/use-toast'
 export const useAuthStore = defineStore('auth', () => {
     const router = useRouter()
     const storeError = useErrorStore()
+    const transactions = useTransactionsStore()
 
     const { toast } = useToast()
     const user = ref(null)
@@ -102,6 +104,7 @@ export const useAuthStore = defineStore('auth', () => {
 
     const logout = async () => {
         storeError.resetMessages()
+        transactions.resetValues()
         try {
             await axios.post('auth/logout')
             clearUser()
