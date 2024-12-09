@@ -91,7 +91,7 @@ export const useAuthStore = defineStore('auth', () => {
             const responseUser = await axios.get('users/me')
             user.value = responseUser.data.data
             repeatRefreshToken()
-            router.push({ name:'game' })
+            router.push({ name:'gameMode' })
             return user.value
         } catch (e) {
             clearUser()
