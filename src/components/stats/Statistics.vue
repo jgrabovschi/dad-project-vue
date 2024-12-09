@@ -6,6 +6,7 @@ import { ref } from 'vue'
 import GeneralStatistics from './GeneralStatistics.vue';
 import { useAuthStore } from '@/stores/auth';
 import MyStats from './MyStats.vue';
+import AdminStats from './AdminStats.vue';
 
 const authStore = useAuthStore()
 
@@ -34,13 +35,16 @@ const authStore = useAuthStore()
                             </TabsTrigger>
                         </TabsList>
                         <TabsContent value="general">
+                            <!-- General statistics -->
                             <GeneralStatistics />
                         </TabsContent>
                         <TabsContent value="mystats">
+                            <!-- Statistics about the logged in user -->
                             <MyStats />
                         </TabsContent>
                         <TabsContent value="business">
-                            Change your password here.
+                            <!-- Statistics for the admin (business)-->
+                            <AdminStats />
                         </TabsContent>
                     </Tabs>
                 </div>
