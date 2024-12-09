@@ -69,6 +69,7 @@ const startGame = (board) =>{
         }
     } else{
       //multiplayershit here
+      router.push({ name: 'multiplayerGames'})
     }
     //console.log(board)
 }

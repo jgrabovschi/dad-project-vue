@@ -160,7 +160,7 @@ watch(gameWon, (newValue, oldValue) => {
           total_time: formattedTime.value
         };
         console.log(game_id.value)
-        const response = axios.put(`/games/${game_id.value}`,payload)
+        const response = axios.put(`/games/${game_id.value}`, payload)
         .then((response) => {
             //isto é um sleep
           new Promise(r => setTimeout(r, 5000))
