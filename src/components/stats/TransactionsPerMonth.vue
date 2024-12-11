@@ -18,36 +18,22 @@ const isDarkMode = computed(() => window.matchMedia && window.matchMedia("(prefe
 
 
 const props = defineProps({
-    stats: Object,
+    stats: Array,
 })
-
-const getAllMonths = (wins, losses) => {
-    const allMonths = new Set();
-
-    wins.forEach(item => {
-      allMonths.add(item.month + '/' + item.year);
-    });
-    losses.forEach(item => {
-      allMonths.add(item.month + '/' + item.year);
-    });
-
-    return Array.from(allMonths);
-  }
-
 
 const options = ref({
     chart: {
-        type: "column",
+        type: 'bar',
         backgroundColor: isDarkMode.value ? "#1f2937" : "#fff",  // Background color based on dark mode
       },
       title: {
-        text: "Multiplayer Games Played by Month",
+        text: "Transactions per Month",
         style: {
           color: isDarkMode.value ? "#fff" : "#000",  // Title color
         },
       },
       xAxis: {
-        categories: getAllMonths(props.stats.wins_per_month, props.stats.losses_per_month),
+        categories: props.stats.map((item) => item.month + '/' + item.year),
         labels: {
           style: {
             color: isDarkMode.value ? "#fff" : "#000",  // Axis label color
@@ -72,14 +58,9 @@ const options = ref({
       },
       series: [
         {
-          name: "Wins",
-          data: props.stats.wins_per_month.map((item) => item.total_wins),
+          name: "Transactions",
+          data: props.stats.map((item) => item.total_transactions),
           color: isDarkMode.value ? "#00bcd4" : "#2196f3",  // Series color for dark mode
-        },
-        {
-          name: "Losses",
-          data: props.stats.losses_per_month.map((item) => item.total_losses),
-          color: "red",  // Series color for dark mode
         },
       ],
       tooltip: {
@@ -92,9 +73,9 @@ const options = ref({
 </script>
 
 <template>
-    <p v-if="stats.wins_per_month.length == 0 && stats.losses_per_month.length == 0" 
+    <p v-if="stats.length == 0" 
             class="dark:text-white m-6 text-center">
-        No data about wins and losses available to show in a graph.
+        No data about transactions available to show in a graph.
     </p>
     <Chart v-else :options="options" />
 </template>

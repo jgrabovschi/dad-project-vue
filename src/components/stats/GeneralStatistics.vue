@@ -51,6 +51,7 @@ axios.get(axios.defaults.baseURL + '/stats')
             <span class="dark:text-slate-300">{{ stats.boards }}</span>
         </div>
         <div>
+            <!-- GRAPH -->
             <GamesPerMonth :stats="stats.games_per_month"/>
         </div>
     </div>
