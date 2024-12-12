@@ -1,13 +1,13 @@
 <script setup>
 import { onMounted } from 'vue'
 //import Game from './Game.vue'
-//import { useGamesStore } from '@/stores/games';
+import { useMultiplayerGamesStore } from '@/stores/multiplayerGames';
 
-//const storeGames = useGamesStore()
+const storeMultiplayerGames = useMultiplayerGamesStore()
 
-/*onMounted(() => {
-    storeGames.fetchPlayingGames()
-})*/
+onMounted(() => {
+    storeMultiplayerGames.fetchPlayingGames()
+})
 </script>
 
 <template>
