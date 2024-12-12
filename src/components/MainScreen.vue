@@ -1,15 +1,17 @@
 <script setup>
-import { RouterLink } from 'vue-router';
+import { RouterLink, useRouter } from 'vue-router';
 import Game from './Game.vue'
 import Transactions from './transactions/Transactions.vue';
 import { useAuthStore } from '@/stores/auth'
-import { provide, useTemplateRef } from 'vue'
+import { provide, useTemplateRef, watch } from 'vue'
 import GlobalAlertDialog from '@/components/common/GlobalAlertDialog.vue'
 import Toaster from '@/components/ui/toast/Toaster.vue'
+import { useRoutingStore } from '@/stores/routing';
 import GameAlert from '@/components/common/GameAlert.vue'
 
 const storeAuth = useAuthStore()
-
+const router = useRouter()
+const routing = useRoutingStore()
 const alertDialog = useTemplateRef('alert-dialog')
 provide('alertDialog', alertDialog)
 const gameAlert = useTemplateRef('game-alert')
@@ -23,6 +25,20 @@ const logout = () => {
 const logoutConfirmed = () => {
     storeAuth.logout()
 }
+
+watch (() => routing.route, () => { 
+   if(routing.route){
+        router.replace(routing.route).then(() => {
+            const currentRoute = router.currentRoute.value;
+            router.replace({ path: '/' }).then(() => {
+               router.replace(currentRoute);
+            });
+         });
+         
+
+    }
+})
+
 </script>
 
 <template>

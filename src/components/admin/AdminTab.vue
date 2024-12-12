@@ -24,7 +24,7 @@ const storeAuth = useAuthStore()
 
 
     <Tabs default-value="userlist">
-    <TabsList class="grid w-[400px] grid-cols-2 mx-auto bg-white dark:bg-gray-800 border-0">
+    <TabsList class="grid w-[400px] grid-cols-2 mx-auto dark:bg-slate-600 dark:text-slate-300 border-0">
       <TabsTrigger value="userlist">
         User List
       </TabsTrigger>
