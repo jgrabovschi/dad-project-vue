@@ -2,7 +2,7 @@
 import Lobby from './Lobby.vue'
 import Games from './Games.vue'
 //import Chat from '@/components/chat/Chat.vue'
-import { useAuthStore} from '@/stores/auth'
+import { useAuthStore } from '@/stores/auth'
 
 const storeAuth = useAuthStore()
 </script>
