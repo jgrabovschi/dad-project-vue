@@ -59,7 +59,7 @@ export const useLobbyStore = defineStore('lobby', () => {
     }
 
     // join a game of the lobby
-    const joinGame = (id) => {
+    const joinGame = (id, board_id) => {
         storeError.resetMessages()
         socket.emit('joinGame', id, async (response) => {
             // callback executed after the join is complete
@@ -67,8 +67,10 @@ export const useLobbyStore = defineStore('lobby', () => {
                 return
             }
             const APIresponse = await axios.post('games', {
-                player1_id: response.player1.id,
-                player2_id: response.player2.id,
+                created_user_id: response.player1.id,
+                second_player_user_id: response.player2.id,
+                board_id: board_id,
+                type: 'M',
             })
             const newGameOnDB = APIresponse.data.data
             newGameOnDB.player1SocketId = response.player1SocketId

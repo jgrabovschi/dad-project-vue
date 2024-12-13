@@ -18,7 +18,7 @@ const storeLobby = useLobbyStore()
                     {{ new Date(game.created_at).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit", second:
                     "2-digit" }) }}</span>
                 <span class="text-xs ps-1 pb-2 -mt-1 text-gray-500">
-                    board_size: {{ game.cols + ' x ' + game.rows}}</span>
+                    board_size: {{ game.board_cols + ' x ' + game.board_rows}}</span>
             </div>
             <div class="py-1 flex items-center min-w-[1.9rem]">
                 <button v-show="storeLobby.canRemoveGame(game)" type="button"
@@ -31,7 +31,7 @@ const storeLobby = useLobbyStore()
                     </svg>
                 </button>
                 <button v-show="storeLobby.canJoinGame(game)" type="button"
-                    class="rounded bg-cyan-500 p-2 m-0.5 text-white" @click="storeLobby.joinGame(game.id)">
+                    class="rounded bg-cyan-500 p-2 m-0.5 text-white" @click="storeLobby.joinGame(game.id, game.board_id)">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="3"
                         stroke="currentColor" class="size-4">
                         <path stroke-linecap="round" stroke-linejoin="round"

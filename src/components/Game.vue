@@ -38,7 +38,7 @@ const formattedTime = computed(() => {
   });
 
 // Start the stopwatch
-const start = () => {
+const startStopwatch = () => {
   if (!isRunning.value) {
     isRunning.value = true;
     startTime.value = Date.now() - elapsedTime.value; // Account for paused time
@@ -140,7 +140,7 @@ startGame(board_rows.value , board_cols.value)
 
 console.log(cardsImages.value)
 
-start()
+startStopwatch()
 
 
 watch(gameWon, (newValue, oldValue) => {
