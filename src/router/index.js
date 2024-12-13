@@ -141,12 +141,34 @@ router.beforeEach(async (to, from, next) => {
       return
     }
 
+    if (to.name == "editprofile" && (!storeAuth.user)) {
+      next({ name: 'login' })
+      return
+    }
+
+    if (to.name == "removeAccount" && (storeAuth.userType == "A")) {
+      next({ name: 'myprofile' })
+      return
+    }
+
+    if(to.name == "removeAccount" && (!storeAuth.user)){
+      next({name: 'login'})
+      return
+
+    }
+    
+
     // // routes "updateTask" and "updateProject" are only accessible when user is logged in
     // if (((to.name == 'updateTask') || (to.name == 'updateProject')) && (!storeAuth.user)) {
     //     next({ name: 'login' })
     //     return
     // }
     // all other routes are accessible to everyone, including anonymous users
+
+    if(to.name == "adminTab" && storeAuth.userType != "A"){
+      next({name: 'myprofile'})
+      return
+    } 
     
     if(to.name == "transactions" && (storeAuth.user == null)){
       next({name: 'login'})
@@ -173,6 +195,7 @@ router.beforeEach(async (to, from, next) => {
         return
       }
       next()
+
 })
 
 export default router
