@@ -24,10 +24,10 @@ export const useMultiplayerGamesStore = defineStore('multiplayerGames', () => {
     }
 
     const playerNumberOfCurrentUser = (game) => {
-        if (game.player1_id === storeAuth.userId) {
+        if (game.player1_id === storeAuth.user.id) {
             return 1
         }
-        if (game.player2_id === storeAuth.userId) {
+        if (game.player2_id === storeAuth.user.id) {
             return 2
         }
         return null
@@ -100,10 +100,20 @@ export const useMultiplayerGamesStore = defineStore('multiplayerGames', () => {
             }
             removeGameFromList(game)
         })
+    }
+
+    const userStoppedPlaying = (game, user_id) => {
+        storeError.resetMessages()
+        socket.emit('userStopppedPlaying', game.id, user_id, (response) => {
+            if (webSocketServerResponseHasError(response)) {
+                return
+            }
+            removeGameFromList(game)
+        })
     } 
     
     socket.on('gameStarted', async (game) => {
-        if (game.player1_id === storeAuth.userId) {
+        if (game.player1_id === storeAuth.user.id) {
             toast({
                     title: 'Game Started',
                     description: `Game #${game.id} has started!`,
@@ -130,7 +140,7 @@ export const useMultiplayerGamesStore = defineStore('multiplayerGames', () => {
     })
 
     socket.on('gameQuitted', async (payload) => {
-        if (payload.userQuit.id != storeAuth.userId) {
+        if (payload.userQuit.id != storeAuth.user.id) {
             toast({
                 title: 'Game Quit',
                 description: `${payload.userQuit.name} has quitted game #${payload.game.id}, giving you the win!`,
@@ -153,6 +163,8 @@ export const useMultiplayerGamesStore = defineStore('multiplayerGames', () => {
         const updatedGameOnDB = APIresponse.data.data
         console.log('Game was interrupted and updated on the database: ', updatedGameOnDB)
     })
+
+    //socket.on opponent stop playing
     
     return {
         games, totalGames, playerNumberOfCurrentUser, fetchPlayingGames, play, quit, close
