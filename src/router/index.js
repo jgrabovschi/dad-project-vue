@@ -15,6 +15,8 @@ import AdminTab from '@/components/admin/AdminTab.vue'
 import ChoosingScoreboards from '@/components/scoreboards/Scoreboards.vue'
 import Statistics from '@/components/stats/Statistics.vue'
 import MultiplayerGames from '@/components/multiplayer/MultiplayerGames.vue'
+import PurchaseOptions from '@/components/transactions/PurchaseOptions.vue'
+import PaymentForm from '@/components/transactions/PaymentForm.vue'
 
 
 
@@ -81,6 +83,16 @@ const router = createRouter({
       path: '/signup',
       name: 'signup',
       component: Signup,
+    },
+    {
+      path: '/braincoins',
+      name: 'purchaseOptions',
+      component: PurchaseOptions,
+    },
+    {
+      path: '/braincoins/buy/:pack',
+      name: 'PaymentForm',
+      component: PaymentForm,
     },
     {
       path: '/editprofile',

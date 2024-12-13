@@ -98,6 +98,7 @@ onMounted(transactionsStore.loadTransactions);
                         <TableHead class="w-28 dark:text-slate-200">Transaction Date</TableHead>
                         <TableHead v-if="authStore.userType == 'A'" class="w-28 dark:text-slate-200 text-center">User Nickname</TableHead>
                         <TableHead class="text-center dark:text-slate-200">Type</TableHead>
+                        <TableHead v-if="transactionsStore.filter=='I' || transactionsStore.filter==''"class="text-center dark:text-slate-200">Game</TableHead>
                         <TableHead v-if="transactionsStore.filter=='P' || transactionsStore.filter==''" class="text-center dark:text-slate-200">Cost (In Euros)</TableHead>
                         <TableHead v-if="transactionsStore.filter=='P' || transactionsStore.filter==''" class="text-center dark:text-slate-200">Payment Method</TableHead>
                         <TableHead v-if="transactionsStore.filter=='P' || transactionsStore.filter==''" class="text-center dark:text-slate-200">Payment Reference</TableHead>
@@ -111,7 +112,8 @@ onMounted(transactionsStore.loadTransactions);
                         <TableCell class="font-medium dark:text-slate-200">{{transaction.transaction_datetime}}</TableCell>
                         <TableCell v-if="authStore.userType == 'A'" class="w-28 text-center dark:text-slate-200">{{transaction.user != null ? transaction.user : '---------'}}</TableCell>
                         <TableCell class="text-center dark:text-slate-200">{{transaction.type}}</TableCell>
-                        <TableCell v-if="transactionsStore.filter=='P' || transactionsStore.filter==''" class="text-center dark:text-slate-200">{{transaction.euros != null ? transaction.euros : '---------'}}</TableCell>
+                        <TableCell v-if="transactionsStore.filter=='I' || transactionsStore.filter==''" class="text-center dark:text-slate-200">{{transaction.game != null ? transaction.game : '---------'}}</TableCell>
+                        <TableCell v-if="transactionsStore.filter=='P' || transactionsStore.filter==''" class="text-center dark:text-slate-200">{{transaction.euros != null ? transaction.euros + '€' : '---------'}}</TableCell>
                         <TableCell v-if="transactionsStore.filter=='P' || transactionsStore.filter==''" class="text-center dark:text-slate-200">{{transaction.payment_type != null ? transaction.payment_type : '---------'}}</TableCell>
                         <TableCell v-if="transactionsStore.filter=='P' || transactionsStore.filter==''"class="text-center dark:text-slate-200">{{transaction.payment_reference != null ? transaction.payment_reference : '---------'}}</TableCell>
                         <TableCell class="text-center dark:text-slate-200">{{transaction.brain_coins}}</TableCell>
