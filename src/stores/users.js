@@ -14,6 +14,7 @@ export const useUsersStore = defineStore('admin', () => {
     const isLoading = ref(false)
     const totalItems = ref(0)
     const searchName = ref('')
+    const searchUserType = ref('')
      
 
 
@@ -22,6 +23,7 @@ export const useUsersStore = defineStore('admin', () => {
         isLoading.value = true
         console.log(searchName.value)
         try {
+            /*
             if(searchName.value == undefined || searchName.value == '') {
                 const response = await axios.get(`/users`+ '?page=' + currentPage.value)
                 users.value = response.data.data
@@ -35,8 +37,28 @@ export const useUsersStore = defineStore('admin', () => {
                 pages.value = response.data.meta.last_page
                 currentPage.value = response.data.meta.current_page
                 totalItems.value = response.data.meta.total
-            }
-            
+            }*/
+                if(searchUserType.value == '' && searchName.value == '') {
+                    const response = await axios.get(`/users`+ '?page=' + currentPage.value)
+                    users.value = response.data.data
+                    pages.value = response.data.meta.last_page
+                    currentPage.value = response.data.meta.current_page
+                    totalItems.value = response.data.meta.total
+                }else if(searchName.value != '' && searchUserType.value == ''){
+                    console.log(searchName.value)
+                    const response = await axios.get(`/users`+ '?page=' + currentPage.value + '&search=' + searchName.value)
+                    users.value = response.data.data
+                    pages.value = response.data.meta.last_page
+                    currentPage.value = response.data.meta.current_page
+                    totalItems.value = response.data.meta.total
+                }else{
+                    console.log(searchName.value)
+                    const response = await axios.get(`/users`+ '?page=' + currentPage.value + '&search=' + searchName.value + '&type=' + searchUserType.value)
+                    users.value = response.data.data
+                    pages.value = response.data.meta.last_page
+                    currentPage.value = response.data.meta.current_page
+                    totalItems.value = response.data.meta.total
+                }
 
         } catch (e) {
             errorStore.setErrorMessages(e.response.data.message, e.response.data.errors, e.response.status, 'Getting Users Error!')
@@ -93,5 +115,5 @@ export const useUsersStore = defineStore('admin', () => {
 
     
 
-    return {loadUsers, users, pages, currentPage, isLoading, nextPage, previousPage, toPage, totalItems,  removeUser, toggleBlockUser, searchName}
+    return {loadUsers, users, pages, currentPage, isLoading, nextPage, previousPage, toPage, totalItems,  removeUser, toggleBlockUser, searchName, searchUserType}
 })
