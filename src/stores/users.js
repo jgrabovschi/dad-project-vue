@@ -22,6 +22,19 @@ export const useUsersStore = defineStore('admin', () => {
         errorStore.resetMessages()
         isLoading.value = true
         console.log(searchName.value)
+
+        const queryParams = new URLSearchParams({
+            page: currentPage.value,
+        });
+        
+        if (searchName.value) {
+            queryParams.append('search', searchName.value);
+        }
+        
+        if (searchUserType.value) {
+            queryParams.append('type', searchUserType.value);
+        }
+
         try {
             /*
             if(searchName.value == undefined || searchName.value == '') {
@@ -38,6 +51,8 @@ export const useUsersStore = defineStore('admin', () => {
                 currentPage.value = response.data.meta.current_page
                 totalItems.value = response.data.meta.total
             }*/
+
+                /*
                 if(searchUserType.value == '' && searchName.value == '') {
                     const response = await axios.get(`/users`+ '?page=' + currentPage.value)
                     users.value = response.data.data
@@ -58,7 +73,16 @@ export const useUsersStore = defineStore('admin', () => {
                     pages.value = response.data.meta.last_page
                     currentPage.value = response.data.meta.current_page
                     totalItems.value = response.data.meta.total
-                }
+                }*/
+                const response = await axios.get(`/users?${queryParams.toString()}`);
+                const { data, meta } = response.data;
+            
+                users.value = data;
+                pages.value = meta.last_page;
+                currentPage.value = meta.current_page;
+                totalItems.value = meta.total;
+
+            
 
         } catch (e) {
             errorStore.setErrorMessages(e.response.data.message, e.response.data.errors, e.response.status, 'Getting Users Error!')
