@@ -17,6 +17,7 @@ import Statistics from '@/components/stats/Statistics.vue'
 import MultiplayerGames from '@/components/multiplayer/MultiplayerGames.vue'
 import PurchaseOptions from '@/components/transactions/PurchaseOptions.vue'
 import PaymentForm from '@/components/transactions/PaymentForm.vue'
+import { useMultiplayerGamesStore } from '@/stores/multiplayerGames'
 
 
 
@@ -131,6 +132,7 @@ let handlingFirstRoute = true
 
 router.beforeEach(async (to, from, next) => {
     const storeAuth = useAuthStore()
+    const storeGames = useMultiplayerGamesStore()
     if (handlingFirstRoute) {
         handlingFirstRoute = false
         await storeAuth.restoreToken()
@@ -155,6 +157,19 @@ router.beforeEach(async (to, from, next) => {
       next({name: 'login'})
       return
 
+    }
+
+    if(to.name == "multiplayerGames" && (!storeAuth.user)){
+      next({name: 'gameMode'})
+      return
+
+    }
+  
+    if(from.name == "multiplayerGames"){
+      storeGames.leaveTabMultiplayerGames()
+      next()
+      return
+      
     }
     
 
@@ -190,11 +205,11 @@ router.beforeEach(async (to, from, next) => {
     } 
     
     if(to.name == "transactions" && (storeAuth.userType != "A")) 
-      {
-        next({name: 'TransactionsByUser', params: { nickname: storeAuth.user.nickname }})
-        return
-      }
-      next()
+    {
+      next({name: 'TransactionsByUser', params: { nickname: storeAuth.user.nickname }})
+      return
+    }
+    next()
 
 })
 

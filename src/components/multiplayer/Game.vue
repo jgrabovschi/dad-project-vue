@@ -78,12 +78,21 @@ const gameAlert = inject('gameAlert')
 const flipCard = (card) => {
     
     //meter aqui um emit
+    //props.game.total_time = formattedTime.value;
     storeGames.play(props.game,
       { 
         row: card.row,
         col: card.col,
-      }
+      },
+      formattedTime.value
     )
+}
+
+const closeGame = () => {
+    
+    //meter aqui um emit
+    //props.game.total_time = formattedTime.value;
+    storeGames.close(props.game)
 }
 
 const goToGamehistory = () =>{
@@ -118,14 +127,19 @@ watch(isMyTurn, (newValue, oldValue) => {
     
     lastMoveDone.value = formattedTime.value
     console.log(lastMoveDone.value)
+    console.log(props.game)
   }else{
     lastMoveDone.value = 999
   }
 });
 
 watch(gameInterrupted, (newValue, oldValue) => {
-  if(gameInterrupted === true){
-    //codigo aqui para chamer no auth do multiplayer game
+  if(gameInterrupted.value == true){
+    props.game.total_time = formattedTime.value;
+    console.log(props.game)
+    storeGames.userStoppedPlaying(props.game)
+    //codigo aqui para chamer no auth do multiplayer game do userStopplaying para avisar que parou de jogar
+    //tens mandar aqui um closeGame para o scoket
   }
 });
 
@@ -139,12 +153,50 @@ if(storeGames.playerNumberOfCurrentUser(props.game) == props.game.currentPlayer)
   <div class="flex justify-center items-center p-4">
     <CardComponent class="max-w-6xl h-auto rounded-lg bg-white dark:bg-gray-800 border-0 shadow-md p-4">
       <div class="text-center">
-        <p class="text-black dark:text-white mb-4 text-xl">Game</p>
-        <p class="text-black dark:text-white mb-4 text-xl">{{ formattedTime }}</p>
-        <p v-if="isMyTurn" class="text-black dark:text-white mb-4 text-xl">Your turn</p>
-        <p v-else class="text-black dark:text-white mb-4 text-xl">Opponnent Turn</p>
-        <p class="text-black dark:text-white mb-4 text-xl">Pairs Found: {{ pairsFound }}</p>
-        <p v-if="gameInterrupted" class="text-black dark:text-white mb-4 text-xl" >PARASTE DE JOGAR DUMBFUCK</p>
+        <div class="space-y-6">
+          <!-- Static Info: Game ID and Time -->
+          <div class="space-y-2">
+            <p class="text-2xl font-semibold text-blue-600 dark:text-blue-400">
+              Game #{{ game.id }}
+            </p>
+            <p class="text-lg text-gray-600 dark:text-gray-400">
+              {{ formattedTime }}
+            </p>
+          </div>
+
+          <!-- Dynamic Info: Turn Indicator and Pairs Found -->
+          <div class="space-y-2">
+            <p 
+              v-if="isMyTurn" 
+              class="text-lg font-medium text-green-600 dark:text-green-400"
+            >
+              Your turn
+            </p>
+            <p 
+              v-else 
+              class="text-lg font-medium text-red-600 dark:text-red-400"
+            >
+              Opponent's Turn
+            </p>
+            <p class="text-lg font-medium text-gray-700 dark:text-gray-300">
+              Pairs Found: 
+              <span class="text-blue-600 dark:text-blue-400 font-bold">
+                {{ pairsFound }}
+              </span>
+            </p>
+          </div>
+
+          <!-- Close Button -->
+          <div class="flex justify-center">
+            <button 
+              @click="closeGame"
+              class="px-4 py-2 bg-red-600 text-white rounded-lg shadow-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-400 dark:focus:ring-red-800"
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      <br>
         <!-- Grid container with dynamic columns -->
         <div class="grid gap-4" :style="{ gridTemplateColumns: `repeat(${game.board_id.board_cols}, minmax(0, 1fr))` }">
           <!-- Iterate over rows -->

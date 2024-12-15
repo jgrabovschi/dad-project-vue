@@ -27,8 +27,7 @@ const clickSingle = () =>{
 }
 
 const clickMulti = () =>{
-    singlePlayerChosen.value = false;
-    multiPlayerChosen.value = true;
+  router.push({ name: 'multiplayerGames'})
 }
 
 const startGame = (board) =>{
@@ -130,7 +129,7 @@ const checkAvailbleBoards = (board) =>{
                 }">
                 <h2 class="text-xl font-bold">Multiplayer</h2>
                 <p class="text-sm mt-2">
-                  Challenge others in a battle of brains and memory.
+                  Create or Join a lobby. Challenge others in a battle of brains and memory.
                 </p>
               </div>
               <div v-else class="p-6 text-white rounded-lg shadow-lg cursor-pointer bg-green-800">

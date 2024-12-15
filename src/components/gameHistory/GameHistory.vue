@@ -80,7 +80,7 @@ gamesStore.loadGames()
                             <TableHeader>
                               <TableRow>
                                 <TableHead class="dark:text-white text-xs md:text-sm">User</TableHead>
-                                <TableHead class="dark:text-white text-xs md:text-sm">Moves</TableHead>
+                                <TableHead class="dark:text-white text-xs md:text-sm">Pairs Discovered</TableHead>
                               </TableRow>
                             </TableHeader>
                             <TableBody>

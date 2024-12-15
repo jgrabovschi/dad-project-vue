@@ -86,12 +86,12 @@ export const useLobbyStore = defineStore('lobby', () => {
 
     // Whether the current user can remove a specific game from the lobby
     const canRemoveGame = (game) => {
-        return game.player1.id === storeAuth.userId
+        return game.player1.id === storeAuth.user.id
     }
     
     // Whether the current user can join a specific game from the lobby
     const canJoinGame = (game) => {
-        return storeAuth.user && game.player1.id !== storeAuth.userId
+        return storeAuth.user && game.player1.id !== storeAuth.user.id
     }
 
     return {
