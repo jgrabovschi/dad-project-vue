@@ -52,7 +52,7 @@ onMounted(() => {
             <CardDescription>{{ storeLobby.totalGames == 1 ? '1 game' : storeLobby.totalGames + ' games'}} waiting.</CardDescription>
         </CardHeader>
         <CardContent class="p-4">
-            <div v-if="storeAuth.user.balance >=5" class="py-2 flex items-center space-x-4">
+            <div v-if="storeAuth.balance >= 5" class="py-2 flex items-center space-x-4">
                 <Button @click="storeLobby.addGame(board_id, cols, rows)">
                     New Game
                 </Button>

@@ -64,6 +64,7 @@ const startGame = (board) =>{
 
         } catch (e) {
             //console.log(e);
+            isLoading.value = false
             storeError.setErrorMessages(e.response.data.message, e.response.data.errors, e.response.status, 'Getting Games Error!')
         }
     } else{
