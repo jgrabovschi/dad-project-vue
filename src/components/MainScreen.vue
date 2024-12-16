@@ -1,7 +1,6 @@
 <script setup>
 import { RouterLink, useRouter } from 'vue-router';
 import Game from './Game.vue'
-import Transactions from './transactions/Transactions.vue';
 import { useAuthStore } from '@/stores/auth'
 import { provide, useTemplateRef, watch } from 'vue'
 import GlobalAlertDialog from '@/components/common/GlobalAlertDialog.vue'
@@ -92,13 +91,7 @@ watch (() => routing.route, () => {
                   </div>
                   <ul class="py-1" role="none">
                     <li>
-                      <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white" role="menuitem">Dashboard</a>
-                    </li>
-                    <li>
-                      <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white" role="menuitem">Settings</a>
-                    </li>
-                    <li>
-                      <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white" role="menuitem">Earnings</a>
+                     <RouterLink :to="{ name: 'purchaseOptions' }" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white" role="menuitem">Add Funds</RouterLink>
                     </li>
                     <li>
                       <a @click="logout" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white" role="menuitem">Sign out</a>

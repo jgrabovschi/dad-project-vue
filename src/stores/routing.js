@@ -6,7 +6,6 @@ import axios from 'axios'
 
 export const useRoutingStore = defineStore('routing', () => {
     const route = ref(null);
-
     return{
         route
     }

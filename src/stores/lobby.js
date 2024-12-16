@@ -59,7 +59,7 @@ export const useLobbyStore = defineStore('lobby', () => {
     }
 
     // join a game of the lobby
-    const joinGame = (id) => {
+    const joinGame = (id, board_id) => {
         storeError.resetMessages()
         socket.emit('joinGame', id, async (response) => {
             // callback executed after the join is complete
@@ -67,12 +67,16 @@ export const useLobbyStore = defineStore('lobby', () => {
                 return
             }
             const APIresponse = await axios.post('games', {
-                player1_id: response.player1.id,
-                player2_id: response.player2.id,
+                created_user_id: response.player1.id,
+                second_player_user_id: response.player2.id,
+                board_id: board_id,
+                type: 'M',
             })
             const newGameOnDB = APIresponse.data.data
             newGameOnDB.player1SocketId = response.player1SocketId
             newGameOnDB.player2SocketId = response.player2SocketId
+            newGameOnDB.player1_id = response.player1.id
+            newGameOnDB.player2_id = response.player2.id
             // After adding the game to the DB emit a message to the server to start the game
             socket.emit('startGame', newGameOnDB, (startedGame) => {
                 console.log('Game has started', startedGame)
@@ -82,12 +86,12 @@ export const useLobbyStore = defineStore('lobby', () => {
 
     // Whether the current user can remove a specific game from the lobby
     const canRemoveGame = (game) => {
-        return game.player1.id === storeAuth.userId
+        return game.player1.id === storeAuth.user.id
     }
     
     // Whether the current user can join a specific game from the lobby
     const canJoinGame = (game) => {
-        return storeAuth.user && game.player1.id !== storeAuth.userId
+        return storeAuth.user && game.player1.id !== storeAuth.user.id
     }
 
     return {

@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed, watch } from 'vue'
+import { ref, computed, watch, onBeforeMount } from 'vue'
 import Card from './Card.vue'
 import { inject } from 'vue' 
 import { useRoute, useRouter } from 'vue-router'
@@ -22,6 +22,32 @@ const game_id = ref(null);
 const board_cols = ref(null);
 const board_rows = ref(null);
 const lastMoveDone = ref(0);
+const total_turns = ref(1);
+
+onBeforeMount(() => {
+
+  
+  if(game_id.value != null){
+    const response = axios.get(`/games/${game_id.value}`)
+    .then((response) => {
+      console.log(response.data.data)   
+      if(response.data.data.status == 'E' || response.data.data.status == 'I'){
+        gameAlert.value.open(
+        goToGamemode,  
+          'the game has already finished!', 
+          `You will be redirected to the chooseGame mode page in 5 seconds`
+        ) 
+        new Promise(r => setTimeout(r, 5000))
+            .then(() =>{
+              goToGamemode()
+            })
+      }
+          
+    })
+  }
+  
+
+});
 
 //STOPWATCH SHITTTTTTTTTTTTTTTTTTTTTTTTTTTTT
 
@@ -38,7 +64,7 @@ const formattedTime = computed(() => {
   });
 
 // Start the stopwatch
-const start = () => {
+const startStopwatch = () => {
   if (!isRunning.value) {
     isRunning.value = true;
     startTime.value = Date.now() - elapsedTime.value; // Account for paused time
@@ -103,9 +129,12 @@ const flipCard = (card) => {
 
     card.flipped = !card.flipped
 
+    
+
     flippedPair.push(card)
     if (flippedPair.length === 2) {
         isMyTurn.value = false;
+        total_turns.value =  total_turns.value + 1
         console.log(flippedPair[0])
         console.log(flippedPair[1])
         if (flippedPair[0].pair_id === flippedPair[1].pair_id 
@@ -130,34 +159,36 @@ const flipCard = (card) => {
     lastMoveDone.value = formattedTime.value;
 }
 
-const goToGamehistory = () =>{
+const goToGamemode = () =>{
     
   gameAlert.value.dissapearAlert()
-  router.push('myprofile')
+  router.push({ name: 'gameMode'})
 }
 
 startGame(board_rows.value , board_cols.value)
 
 console.log(cardsImages.value)
 
-start()
+startStopwatch()
 
 
 watch(gameWon, (newValue, oldValue) => {
   if (newValue === true) {
     stop()
     gameAlert.value.open(
-      goToGamehistory,  
+      goToGamemode,  
         'Congratulations!', 
-        `You Cleared The board in ${formattedTime.value} and in xx turns.
-        You will be redirected to game mode page in approximately 5 seconds. You can see the stats of your game in the game history`
+        `You Cleared The board in ${formattedTime.value} and in ${total_turns.value} turns.
+        You will be redirected to game mode page in approximately 5 seconds. You can see the stats of your game in the game history 
+        if you are a registered user`
     )
 
     if(storeAuth.user != null){
       try {
         const payload = {
           status: 'E',
-          total_time: formattedTime.value
+          total_time: formattedTime.value,
+          turns: total_turns.value == 1 ? total_turns.value : total_turns.value - 1
         };
         console.log(game_id.value)
         const response = axios.put(`/games/${game_id.value}`, payload)
@@ -165,15 +196,20 @@ watch(gameWon, (newValue, oldValue) => {
             //isto é um sleep
           new Promise(r => setTimeout(r, 5000))
           .then(() =>{
-            gameAlert.value.dissapearAlert()
-            router.push({ name: 'gameMode'})
+            goToGamemode()
           })
         });
 
-    } catch (e) {
-        console.log(e);
-        storeError.setErrorMessages(e.response.data.message, e.response.data.errors, e.response.status, 'Getting Games Error!')
-    }
+      } catch (e) {
+          console.log(e);
+          storeError.setErrorMessages(e.response.data.message, e.response.data.errors, e.response.status, 'Getting Games Error!')
+      }
+    }else{
+        //isto é um sleep
+        new Promise(r => setTimeout(r, 5000))
+          .then(() =>{
+            goToGamemode()
+          })
     }
     
   }
@@ -183,10 +219,9 @@ watch(gameInterrupted, (newValue, oldValue) => {
   if (newValue === true) {
     stop()
     gameAlert.value.open(
-      goToGamehistory,  
-        'Stop the playing', 
-        `You didnt make a move in 20 seconds your game will be interrupted
-        Next time PLAY THE FUCKING GAME YOU BEATIFULL PERSON. You will be
+      goToGamemode,  
+        'You Stop playing the game', 
+        `If you dont make a move in 20 seconds. your game will be interrupted. You will be
         redirect to the gameMode menu in approximately 5 seconds`
     )
 
@@ -200,7 +235,8 @@ watch(gameInterrupted, (newValue, oldValue) => {
         };*/
         const payload = {
           status: 'I',
-          total_time: formattedTime.value
+          total_time: formattedTime.value,
+          turns: total_turns.value == 1 ? total_turns.value : total_turns.value - 1
         };
         console.log(game_id.value)
         const response = axios.put(`/games/${game_id.value}`, payload)
@@ -209,8 +245,7 @@ watch(gameInterrupted, (newValue, oldValue) => {
           //isto é um sleep
           new Promise(r => setTimeout(r, 5000))
           .then(() =>{
-            gameAlert.value.dissapearAlert()
-            router.push({ name: 'gameMode'})
+            goToGamemode()
           })
             
         });
@@ -219,6 +254,12 @@ watch(gameInterrupted, (newValue, oldValue) => {
           console.log(e);
           storeError.setErrorMessages(e.response.data.message, e.response.data.errors, e.response.status, 'Getting Games Error!')
       }
+    }else{
+        //isto é um sleep
+        new Promise(r => setTimeout(r, 5000))
+          .then(() =>{
+            goToGamemode()
+          })
     }
     
   }
@@ -232,8 +273,31 @@ watch(gameInterrupted, (newValue, oldValue) => {
   <div class="flex justify-center items-center p-4">
     <CardComponent class="max-w-6xl h-auto rounded-lg bg-white dark:bg-gray-800 border-0 shadow-md p-4">
       <div class="text-center">
-          <p class="text-black dark:text-white mb-4 text-xl">Game</p>
-          <p class="text-black dark:text-white mb-4 text-xl">{{ formattedTime }}</p>
+        <div class="space-y-6">
+          <!-- Static Info: Game ID and Time -->
+          <div class="space-y-2">
+            <p v-if="game_id" class="text-2xl font-semibold text-blue-600 dark:text-blue-400">
+              Game #{{ game_id }}
+            </p>
+            <p v-else class="text-2xl font-semibold text-blue-600 dark:text-blue-400">
+              Game
+            </p>
+            <p class="text-lg text-gray-600 dark:text-gray-400">
+              {{ formattedTime }}
+            </p>
+          </div>
+
+          <!-- Dynamic Info: Turn Indicator and Pairs Found -->
+          <div class="space-y-2">
+            
+            <p class="text-lg font-medium text-gray-700 dark:text-gray-300">
+              Turn: 
+              <span class="text-blue-600 dark:text-blue-400 font-bold">
+                {{ total_turns }}
+              </span>
+            </p>
+          </div>
+        </div>
           <div class="flex items-center gap-2">
               <!-- Iterate over rows -->
               <div 
