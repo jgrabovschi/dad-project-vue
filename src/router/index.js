@@ -153,11 +153,11 @@ router.beforeEach(async (to, from, next) => {
       return
     } 
 
-    if(to.name == "TransactionsByType" && (storeAuth.user == null)){
+    if(to.name == "TransactionsByType" && (storeAuth.user == null) || (to.name == "TransactionsByType" && (storeAuth.userType != "A"))){
       next({name: 'login'})
       return
     } 
-    if(to.name == "TransactionsByUser" && (storeAuth.user == null) || (to.name == "TransactionsByUser" && (to.params.nickname != storeAuth.user.nickname) && (storeAuth.userType != "A"))){
+    if(to.name == "TransactionsByUser" && (storeAuth.user == null) || (to.name == "TransactionsByUser" && (to.params.nickname != storeAuth.user.nickname && storeAuth.userType != "A"))){
       next({name: 'login'})
       return
     } 

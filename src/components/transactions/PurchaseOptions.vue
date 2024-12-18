@@ -16,41 +16,79 @@ const purchasePack = (pack) => {
 
     <div class="m-8">
         <div class="grid grid-cols-3 gap-4">
-            <!-- Basic Pack -->
-            <div>
-                <div class="bg-zinc-200 p-4 rounded-lg shadow-md text-slate-700 dark:bg-gray-600 dark:text-white">
-                    <p class="font-bold text-center">Basic Pack</p>
-                    <p class="text-center text-2xl font-semibold mt-2">500 Braincoins</p>
-                    <p class="text-center text-lg mt-1">4.99€</p>
-                    <button @click="purchasePack('B')" class="mt-4 w-full bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600">
-                        Buy Now
-                    </button>
+        <!-- Basic Pack -->
+        <div>
+            <div class="bg-zinc-200 p-4 rounded-lg shadow-md text-slate-700 dark:bg-gray-600 dark:text-white">
+                <p class="font-bold text-xl text-center">Basic Pack</p>
+                <div class="flex items-center justify-center space-x-2 mt-2">
+                    <p class="text-center text-2xl font-semibold">500</p>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-brain text-pink-400">
+                        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                        <path d="M15.5 13a3.5 3.5 0 0 0 -3.5 3.5v1a3.5 3.5 0 0 0 7 0v-1.8" />
+                        <path d="M8.5 13a3.5 3.5 0 0 1 3.5 3.5v1a3.5 3.5 0 0 1 -7 0v-1.8" />
+                        <path d="M17.5 16a3.5 3.5 0 0 0 0 -7h-.5" />
+                        <path d="M19 9.3v-2.8a3.5 3.5 0 0 0 -7 0" />
+                        <path d="M6.5 16a3.5 3.5 0 0 1 0 -7h.5" />
+                        <path d="M5 9.3v-2.8a3.5 3.5 0 0 1 7 0v10" />
+                    </svg>
                 </div>
-            </div>
-            
-            <!-- Standard Pack -->
-            <div>
-                <div class="bg-zinc-200 p-4 rounded-lg shadow-md text-slate-700 dark:bg-gray-600 dark:text-white">
-                    <p class="font-bold text-center">Standard Pack</p>
-                    <p class="text-center text-2xl font-semibold mt-2">1000 Braincoins</p>
-                    <p class="text-center text-lg mt-1">9.99€</p>
-                    <button @click="purchasePack('S')" class="mt-4 w-full bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600">
-                        Buy Now
-                    </button>
-                </div>
-            </div>
 
-            <!-- Premium Pack -->
-            <div>
-                <div class="bg-zinc-200 p-4 rounded-lg shadow-md text-slate-700 dark:bg-gray-600 dark:text-white">
-                    <p class="font-bold text-center">Premium Pack</p>
-                    <p class="text-center text-2xl font-semibold mt-2">2500 Braincoins</p>
-                    <p class="text-center text-lg mt-1">19.99€</p>
-                    <button @click="purchasePack('P')" class="mt-4 w-full bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600">
-                        Buy Now
-                    </button>
-                </div>
+                <p class="text-center text-lg mt-1">5.00€</p>
+                <button @click="purchasePack('B')" class="mt-4 w-full bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600">
+                    Buy Now
+                </button>
             </div>
+        </div>
+
+            
+        <!-- Standard Pack -->
+        <div>
+            <div class="bg-zinc-200 p-4 rounded-lg shadow-md text-slate-700 dark:bg-gray-600 dark:text-white">
+                <p class="font-bold text-xl text-center">Standard Pack</p>
+                <div class="flex items-center justify-center space-x-2 mt-2">
+                    <p class="text-center text-2xl font-semibold">1000</p>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-brain text-pink-400">
+                        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                        <path d="M15.5 13a3.5 3.5 0 0 0 -3.5 3.5v1a3.5 3.5 0 0 0 7 0v-1.8" />
+                        <path d="M8.5 13a3.5 3.5 0 0 1 3.5 3.5v1a3.5 3.5 0 0 1 -7 0v-1.8" />
+                        <path d="M17.5 16a3.5 3.5 0 0 0 0 -7h-.5" />
+                        <path d="M19 9.3v-2.8a3.5 3.5 0 0 0 -7 0" />
+                        <path d="M6.5 16a3.5 3.5 0 0 1 0 -7h.5" />
+                        <path d="M5 9.3v-2.8a3.5 3.5 0 0 1 7 0v10" />
+                    </svg>
+                </div>
+
+                <p class="text-center text-lg mt-1">10.00€</p>
+                <button @click="purchasePack('B')" class="mt-4 w-full bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600">
+                    Buy Now
+                </button>
+            </div>
+        </div>
+
+        <!-- Premium Pack -->
+        <div>
+            <div class="bg-zinc-200 p-4 rounded-lg shadow-md text-slate-700 dark:bg-gray-600 dark:text-white">
+                <p class="font-bold text-xl text-center">Premium Pack</p>
+                <div class="flex items-center justify-center space-x-2 mt-2">
+                    <p class="text-center text-2xl font-semibold">2000</p>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-brain text-pink-400">
+                        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                        <path d="M15.5 13a3.5 3.5 0 0 0 -3.5 3.5v1a3.5 3.5 0 0 0 7 0v-1.8" />
+                        <path d="M8.5 13a3.5 3.5 0 0 1 3.5 3.5v1a3.5 3.5 0 0 1 -7 0v-1.8" />
+                        <path d="M17.5 16a3.5 3.5 0 0 0 0 -7h-.5" />
+                        <path d="M19 9.3v-2.8a3.5 3.5 0 0 0 -7 0" />
+                        <path d="M6.5 16a3.5 3.5 0 0 1 0 -7h.5" />
+                        <path d="M5 9.3v-2.8a3.5 3.5 0 0 1 7 0v10" />
+                    </svg>
+                </div>
+
+                <p class="text-center text-lg mt-1">20.00€</p>
+                <button @click="purchasePack('B')" class="mt-4 w-full bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600">
+                    Buy Now
+                </button>
+            </div>
+        </div>
+
         </div>
     </div>
 </div>

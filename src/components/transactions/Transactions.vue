@@ -30,31 +30,21 @@ watch(dropdown_filter, () => {
 });
 
 const filterChange = () => {
-    transactionsStore.resetValues()
     transactionsStore.resetPaginator()
     if (dropdown_filter.value != "none") {
-        if (transactionsStore.filter != "" && transactionsStore.nickname != "") {
+        if (transactionsStore.nickname != "") {
             routing.route = {
                 name: 'TransactionsByUserAndType',
                 params: { type: dropdown_filter.value, nickname: transactionsStore.nickname },
             }
-        } else if (transactionsStore.filter != "" && transactionsStore.nickname == "") {
+        } else {
             routing.route = {
                 name: 'TransactionsByType',
                 params: { type: dropdown_filter.value },
-            };
-        } else if (transactionsStore.filter == "" && transactionsStore.nickname != "") {
-            routing.route = {
-                name: 'TransactionsByUserAndType',
-                params: { nickname: transactionsStore.nickname, type: dropdown_filter.value },
-            };
-        } else if (transactionsStore.filter == "" && transactionsStore.nickname == "") {
-            routing.route = {
-                name: 'TransactionsByType',
-                params: {type: dropdown_filter.value },
-            };
+            }
         }
     } else {
+        transactionsStore.filter = ""
         if (transactionsStore.nickname != "") {
             routing.route = {
                 name: 'TransactionsByUser',
