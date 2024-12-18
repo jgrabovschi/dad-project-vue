@@ -11,7 +11,9 @@ import { onMounted, ref, computed, watch} from 'vue'
 import ListGamesLobby from './ListGamesLobby.vue'
 import { useLobbyStore } from '@/stores/lobby'
 import { useBoardsStore } from '@/stores/boards'
+import { useAuthStore } from '@/stores/auth'
 
+const storeAuth = useAuthStore()
 const storeLobby = useLobbyStore()
 const storeboard = useBoardsStore()
 //id board por defeito
@@ -50,7 +52,7 @@ onMounted(() => {
             <CardDescription>{{ storeLobby.totalGames == 1 ? '1 game' : storeLobby.totalGames + ' games'}} waiting.</CardDescription>
         </CardHeader>
         <CardContent class="p-4">
-            <div class="py-2 flex items-center space-x-4">
+            <div v-if="storeAuth.balance >= 5" class="py-2 flex items-center space-x-4">
                 <Button @click="storeLobby.addGame(board_id, cols, rows)">
                     New Game
                 </Button>
@@ -58,7 +60,13 @@ onMounted(() => {
                     <option v-for="board in storeboard.boards" :value="board.id">{{ board.board_cols + 'x' + board.board_rows }}</option>
                 </select>
             </div>
-            <<div v-if="storeLobby.totalGames > 0">
+            <div v-else class="py-2 flex items-center space-x-4">
+                <Button >
+                    Can´t play Games 
+                </Button>
+                <p>Buy more brain coins</p>
+            </div>
+            <div v-if="storeLobby.totalGames > 0">
                 <ListGamesLobby></ListGamesLobby>
             </div>
             <div v-else>

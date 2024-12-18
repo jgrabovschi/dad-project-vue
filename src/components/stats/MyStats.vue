@@ -53,6 +53,7 @@ axios.get(axios.defaults.baseURL + '/stats/my')
             <span class="dark:text-slate-300">{{ stats.brain_coins_balance }}</span>
         </div>
         <div>
+            <!-- GRAPH -->
             <WinsPerMonth :stats="stats"/>
         </div>
     </div>

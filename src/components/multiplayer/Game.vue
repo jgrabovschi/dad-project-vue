@@ -1,19 +1,20 @@
 <script setup>
 import { ref, computed, watch } from 'vue'
-import Card from './Card.vue'
+import Card from '@/components/Card.vue'
 import { inject } from 'vue' 
 import { useRoute, useRouter } from 'vue-router'
 import {  } from 'vue-router'
 import { Card as CardComponent } from '@/components/ui/card'
-import { useMemoryGame } from '../composables/memoryGame.js'
 import { useAuthStore } from '@/stores/auth'
 import { useErrorStore } from '@/stores/error'
+import { useMultiplayerGamesStore } from '@/stores/multiplayerGames'
 import axios from 'axios';
 //import { useStopwatch } from 'vue-timer-hook';
 
 
 const storeAuth = useAuthStore()
 const storeError = useErrorStore()
+const storeGames = useMultiplayerGamesStore()
 
 const props = defineProps({
     game: {
@@ -28,8 +29,8 @@ const router = useRouter()
 /*const game_id = ref(null);
 const board_cols = ref(null);
 const board_rows = ref(null);
-const lastMoveDone = ref(0);*/
-
+*/
+const lastMoveDone = ref(999);
 //STOPWATCH SHITTTTTTTTTTTTTTTTTTTTTTTTTTTTT
 
 
@@ -68,83 +69,30 @@ const stop = () => {
 
 
 const gameInterrupted = computed(() => {
-
         return (formattedTime.value - lastMoveDone.value) >= 20 
 })
-
-const pairsFound = ref(0);
-
-/*game_id.value = route.query?.game_id ?? null;
-board_cols.value = route.query?.board_cols ?? 3;
-board_rows.value = route.query?.board_rows ?? 4;
-//mudar para int. util
-if((typeof board_cols.value) === "string"){
-  board_cols.value = parseInt(board_cols.value)
-  board_rows.value = parseInt(board_rows.value)
-}*/
-
-/*const {
-    status,
-    currentPlayer: player,
-    cardsImages,
-    pairsFound,
-    gameWon,
-    startGame
-} = useMemoryGame(board_rows.value, board_cols.value)*/
 
 const gameAlert = inject('gameAlert') 
 //isto provalmente vai para dentro do composoble
 
-const isMyTurn = ref(true);
-
-let flippedPair = []
-
-const resetTurn = () =>{
-    lastMoveDone.value = formattedTime.value;
-    isMyTurn.value = true;
-}
-
 const flipCard = (card) => {
     
-    if(!isMyTurn.value || card.matched || card.flipped){
-      return;
-    }
+    //meter aqui um emit
+    //props.game.total_time = formattedTime.value;
+    storeGames.play(props.game,
+      { 
+        row: card.row,
+        col: card.col,
+      },
+      formattedTime.value
+    )
+}
 
-    //o play do game engine é que trata dos flips das cartas depois de receber
-    card.flipped = !card.flipped
-
-    flippedPair.push(card)
-    //emit the flip card
-    //envio o estado do jogo aqui
-    if (flippedPair.length === 2) {
-        isMyTurn.value = false;
-        console.log(flippedPair[0])
-        console.log(flippedPair[1])
-        if (flippedPair[0].pair_id === flippedPair[1].pair_id 
-                && flippedPair[0].id !== flippedPair[1].id) {
-            pairsFound.value = pairsFound.value + 1;
-            setTimeout(() => {
-              flippedPair[0].matched = true
-              flippedPair[1].matched = true
-              flippedPair.splice(0, 2)
-              pairsFound.value = pairsFound.value + 1
-              //aqui outro emit para tirar a carta e dar actualizar os pares de cartas e trocar de turno
-              //o cardImages é o board
-              resetTurn()
-            }, 2000);
-        }else{
-          setTimeout(() => {
-            flippedPair[0].flipped = false
-            flippedPair[1].flipped = false
-            flippedPair.splice(0, 2)
-            //aqui outro emit para trocar de turno e meter carta para baixo
-            //o cardImages é o board
-            resetTurn()
-        }, 2000);
-        }
-        
-    }
-    lastMoveDone.value = formattedTime.value;
+const closeGame = () => {
+    
+    //meter aqui um emit
+    //props.game.total_time = formattedTime.value;
+    storeGames.close(props.game)
 }
 
 const goToGamehistory = () =>{
@@ -153,90 +101,51 @@ const goToGamehistory = () =>{
   router.push('myprofile')
 }
 
-//startGame(board_rows.value , board_cols.value)
+start()
+console.log("gameboard aqui")
+console.log(props.game)
+const pairsFound = computed(() => {
+  //console.log(storeGames.playerNumberOfCurrentUser(props.game))
+  if(storeGames.playerNumberOfCurrentUser(props.game) == 1){
+    return props.game.pairsFoundPlayerOne;
+  }
+  
+  if(storeGames.playerNumberOfCurrentUser(props.game) == 2){
+    return props.game.pairsFoundPlayerTwo;
+  }  
+  
+});
 
-console.log(cardsImages.value)
+const isMyTurn = computed(() => {
+  return storeGames.playerNumberOfCurrentUser(props.game) == props.game.currentPlayer
+  
+});
 
-//start()
 
-
-/*watch(gameWon, (newValue, oldValue) => {
-  if (newValue === true) {
-    stop()
-    gameAlert.value.open(
-      goToGamehistory,  
-        'Congratulations!', 
-        `You Cleared The board in ${formattedTime.value} and in xx turns.
-        You will be redirected to game mode page in approximately 5 seconds. You can see the stats of your game in the game history`
-    )
-
-    if(storeAuth.user != null){
-      try {
-        const payload = {
-          status: 'E',
-          total_time: formattedTime.value
-        };
-        console.log(game_id.value)
-        const response = axios.put(`/games/${game_id.value}`, payload)
-        .then((response) => {
-            //isto é um sleep
-          new Promise(r => setTimeout(r, 5000))
-          .then(() =>{
-            gameAlert.value.dissapearAlert()
-            router.push({ name: 'gameMode'})
-          })
-        });
-
-    } catch (e) {
-        console.log(e);
-        storeError.setErrorMessages(e.response.data.message, e.response.data.errors, e.response.status, 'Getting Games Error!')
-    }
-    }
+watch(isMyTurn, (newValue, oldValue) => {
+  if(newValue === true){
     
+    lastMoveDone.value = formattedTime.value
+    console.log(lastMoveDone.value)
+    console.log(props.game)
+  }else{
+    lastMoveDone.value = 999
   }
 });
-console.log(gameInterrupted.value)
+
 watch(gameInterrupted, (newValue, oldValue) => {
-  if (newValue === true) {
-    stop()
-    gameAlert.value.open(
-      goToGamehistory,  
-        'Stop the playing', 
-        `You didnt make a move in 20 seconds your game will be interrupted
-        Next time PLAY THE FUCKING GAME YOU BEATIFULL PERSON. You will be
-        redirect to the gameMode menu in approximately 5 seconds`
-    )
-
-    if(storeAuth.user != null){
-      try {
-        
-        const payload = {
-          status: 'I',
-          total_time: formattedTime.value
-        };
-        console.log(game_id.value)
-        const response = axios.put(`/games/${game_id.value}`, payload)
-        .then((response) => {
-            
-          //isto é um sleep
-          new Promise(r => setTimeout(r, 5000))
-          .then(() =>{
-            gameAlert.value.dissapearAlert()
-            router.push({ name: 'gameMode'})
-          })
-            
-        });
-
-      } catch (e) {
-          console.log(e);
-          storeError.setErrorMessages(e.response.data.message, e.response.data.errors, e.response.status, 'Getting Games Error!')
-      }
-    }
-    
+  if(gameInterrupted.value == true){
+    props.game.total_time = formattedTime.value;
+    console.log(props.game)
+    storeGames.userStoppedPlaying(props.game)
+    //codigo aqui para chamer no auth do multiplayer game do userStopplaying para avisar que parou de jogar
+    //tens mandar aqui um closeGame para o scoket
   }
-});*/
+});
 
-
+if(storeGames.playerNumberOfCurrentUser(props.game) == props.game.currentPlayer){
+  lastMoveDone.value = formattedTime.value
+}
 
 </script>
 
@@ -244,31 +153,74 @@ watch(gameInterrupted, (newValue, oldValue) => {
   <div class="flex justify-center items-center p-4">
     <CardComponent class="max-w-6xl h-auto rounded-lg bg-white dark:bg-gray-800 border-0 shadow-md p-4">
       <div class="text-center">
-          <p class="text-black dark:text-white mb-4 text-xl">Game</p>
-          <p class="text-black dark:text-white mb-4 text-xl">{{ formattedTime }}</p>
-          <div class="flex items-center gap-2">
-              <!-- Iterate over rows -->
-              <div 
-                  v-for="cardsRow in cardsImages" 
-                  :key="cardsRow[0]?.id" 
-                  class="flex-col gap-2 "
-              >
-                  <!-- Iterate over cards in a row -->
-                  <div 
-                      v-for="card in cardsRow" 
-                      :key="card.id" 
-                      class="bg-white w-24 aspect-[3/4] dark:bg-gray-700 rounded p-1"
-                  >
-                      <Card 
-                          v-if="!card.matched" 
-                          :card="card" 
-                          @flip="flipCard" 
-                          :turn="isMyTurn"
-                      />
-                  </div>
-              </div>
+        <div class="space-y-6">
+          <!-- Static Info: Game ID and Time -->
+          <div class="space-y-2">
+            <p class="text-2xl font-semibold text-blue-600 dark:text-blue-400">
+              Game #{{ game.id }}
+            </p>
+            <p class="text-lg text-gray-600 dark:text-gray-400">
+              {{ formattedTime }}
+            </p>
           </div>
+
+          <!-- Dynamic Info: Turn Indicator and Pairs Found -->
+          <div class="space-y-2">
+            <p 
+              v-if="isMyTurn" 
+              class="text-lg font-medium text-green-600 dark:text-green-400"
+            >
+              Your turn
+            </p>
+            <p 
+              v-else 
+              class="text-lg font-medium text-red-600 dark:text-red-400"
+            >
+              Opponent's Turn
+            </p>
+            <p class="text-lg font-medium text-gray-700 dark:text-gray-300">
+              Pairs Found: 
+              <span class="text-blue-600 dark:text-blue-400 font-bold">
+                {{ pairsFound }}
+              </span>
+            </p>
+          </div>
+
+          <!-- Close Button -->
+          <div class="flex justify-center">
+            <button 
+              @click="closeGame"
+              class="px-4 py-2 bg-red-600 text-white rounded-lg shadow-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-400 dark:focus:ring-red-800"
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      <br>
+        <!-- Grid container with dynamic columns -->
+        <div class="grid gap-4" :style="{ gridTemplateColumns: `repeat(${game.board_id.board_cols}, minmax(0, 1fr))` }">
+          <!-- Iterate over rows -->
+          <div 
+            v-for="cardsRow in game.board" 
+            :key="cardsRow[0]?.id"
+            class="contents"
+          >
+            <!-- Iterate over cards in a row -->
+            <div 
+              v-for="card in cardsRow" 
+              :key="card.id" 
+              class="bg-white w-24 aspect-[3/4] dark:bg-gray-700 rounded p-1"
+            >
+              <Card 
+                v-if="!card.matched" 
+                :card="card" 
+                @flip="flipCard" 
+              />
+            </div>
+          </div>
+        </div>
       </div>
     </CardComponent>
   </div>
 </template>
+

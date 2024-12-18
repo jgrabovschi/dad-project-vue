@@ -103,6 +103,7 @@ userStore.loadUsers()
               <TableHeader>
                 <TableRow>
                   <TableHead class="w-[150px] md:w-[200px] dark:text-white text-xs md:text-sm">ID</TableHead>
+                  <TableHead class="dark:text-white text-xs md:text-sm">Type</TableHead>
                   <TableHead class="dark:text-white text-xs md:text-sm">Name</TableHead>
                   <TableHead class="dark:text-white text-xs md:text-sm">Email</TableHead>
                   <TableHead class="dark:text-white text-xs md:text-sm">Nickname</TableHead>
@@ -113,6 +114,9 @@ userStore.loadUsers()
                 <TableRow v-for="user in userStore.users.filter(user => user.id !== currentUserId)" :key="user.id">
                   <TableCell class="font-medium dark:text-slate-300 text-xs md:text-sm">
                     {{ user.id }}
+                  </TableCell>
+                  <TableCell class="font-medium dark:text-slate-300 text-xs md:text-sm">
+                    {{ user.type }}
                   </TableCell>
                   <TableCell class="dark:text-slate-300 text-xs md:text-sm">
                     {{ user.name }}
