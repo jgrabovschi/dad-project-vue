@@ -432,6 +432,6 @@ export const useAuthStore = defineStore('auth', () => {
     return {
         user, userName, userFirstLastName, userEmail, userType, userGender, userPhotoUrl, gamesWon, nickname, balance,
         login, logout, restoreToken, canUpdateDeleteProject, signup, updateProfile, validatePassword, updateProfilePassword, removeAccount, canDeleteOwnAccount, isAdmin,
-        getFirstLastName
+        getFirstLastName, getUserDataAfterUpdate
     }
 })

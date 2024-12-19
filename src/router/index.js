@@ -148,6 +148,16 @@ router.beforeEach(async (to, from, next) => {
       return
     }
 
+    if (to.name == "PaymentForm" && (!storeAuth.user)) {
+      next({ name: 'login' })
+      return
+    }
+
+    if (to.name == "purchaseOptions" && (!storeAuth.user)) {
+      next({ name: 'login' })
+      return
+    }
+
     if (to.name == "removeAccount" && (storeAuth.userType == "A")) {
       next({ name: 'myprofile' })
       return

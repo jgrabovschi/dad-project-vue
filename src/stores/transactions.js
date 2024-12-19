@@ -3,6 +3,10 @@ import { defineStore } from 'pinia'
 import { useErrorStore } from '@/stores/error'
 import { useAuthStore } from '@/stores/auth'
 import axios from 'axios'
+import { useToast } from '@/components/ui/toast/use-toast'
+import { useRoutingStore } from '@/stores/routing'
+
+
 
 export const useTransactionsStore = defineStore('transactions', () => {
     const filter = ref("");
@@ -14,7 +18,9 @@ export const useTransactionsStore = defineStore('transactions', () => {
     const totalItems = ref(0)
     const storeAuth = useAuthStore();
     const storeError = useErrorStore();
+    const { toast }  = useToast()
     let response
+    const routing = useRoutingStore();
 
     const nextPage = () => {
         if (currentPage.value < pages.value) {
@@ -40,8 +46,6 @@ export const useTransactionsStore = defineStore('transactions', () => {
     }
 
     const loadTransactions = async () => {
-        console.log("nickname: " + nickname.value)
-        console.log("filter: " + filter.value)
         isLoading.value = true;
         storeError.resetMessages();
         let apiUrl = '/transactions';
@@ -54,7 +58,7 @@ export const useTransactionsStore = defineStore('transactions', () => {
         }
 
         try {
-                console.log(apiUrl + '?page=' + currentPage.value)
+
                 response = await axios.get(apiUrl + '?page=' + currentPage.value)
                 transactions.value = response.data.data
                 pages.value = response.data.meta.last_page
@@ -82,6 +86,47 @@ export const useTransactionsStore = defineStore('transactions', () => {
         totalItems.value = 0
     }    
 
+    const insertTransaction = async (transaction) =>{
+
+        const external_verification_url = "https://dad-202425-payments-api.vercel.app/api/debit"
+        const external_verification_payload = {
+            type: transaction['payment_type'],
+            reference: transaction['payment_reference'],
+            value: transaction['euros']
+        } 
+
+        try {
+            await axios.post(external_verification_url, external_verification_payload, {
+              headers: {
+                'Content-Type': 'application/json',
+                'X-Allow-This-Request': 'true',
+              },
+              withCredentials: false,
+            });
+
+            await axios.post('/transactions', transaction, {
+              headers: { 'Content-Type': 'application/json' },
+            });
+
+            toast({
+              title: 'Purchase Completed',
+              description: `Your product has been bought successfully. Please refresh the page if the credits are not appearing`,
+              variant: "destructive",
+              class: "group border-green-500 bg-green-500 text-neutral-50",
+            });
+
+            storeAuth.getUserDataAfterUpdate();
+            routing.route = { name: 'home' };
+        
+          } catch (e) {
+            const errorMessage = e.response?.data?.message || 'An unexpected error occurred';
+            const errorDetails = e.response?.data?.errors || [];
+            const errorStatus = e.response?.status || 500;
+        
+            storeError.setErrorMessages(errorMessage, errorDetails, errorStatus, 'Error buying the product!');
+          }
+        }
+
     return{
         filter,
         nickname,
@@ -96,6 +141,7 @@ export const useTransactionsStore = defineStore('transactions', () => {
         nextPage,
         lastPage,
         resetValues,
-        resetPaginator
+        resetPaginator,
+        insertTransaction
     }
 });
