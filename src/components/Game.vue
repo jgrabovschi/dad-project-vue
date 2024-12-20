@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed, watch, onBeforeMount } from 'vue'
+import { ref, computed, watch, onBeforeMount, onMounted } from 'vue'
 import Card from './Card.vue'
 import { inject } from 'vue' 
 import { useRoute, useRouter } from 'vue-router'
@@ -44,9 +44,22 @@ onBeforeMount(() => {
       }
           
     })
+  }else if(storeAuth.user != null){
+    gameAlert.value.open(
+        goToGamemode,  
+          'Start the game the right way!', 
+          `You will be redirected to the chooseGame mode page in 5 seconds`
+        ) 
+        new Promise(r => setTimeout(r, 5000))
+            .then(() =>{
+              goToGamemode()
+            })
   }
   
+});
 
+onMounted(() => {
+  storeAuth.getUserDataAfterUpdate()
 });
 
 //STOPWATCH SHITTTTTTTTTTTTTTTTTTTTTTTTTTTTT
@@ -178,7 +191,7 @@ watch(gameWon, (newValue, oldValue) => {
     gameAlert.value.open(
       goToGamemode,  
         'Congratulations!', 
-        `You Cleared The board in ${formattedTime.value} and in ${total_turns.value} turns.
+        `You Cleared The board in ${formattedTime.value} and in ${total_turns.value - 1} turns.
         You will be redirected to game mode page in approximately 5 seconds. You can see the stats of your game in the game history 
         if you are a registered user`
     )
@@ -227,12 +240,7 @@ watch(gameInterrupted, (newValue, oldValue) => {
 
     if(storeAuth.user != null){
       try {
-        /*const payload = {
-        created_user_id: storeAuth.user.id,
-        type: 'S',
-        board_id: board.id,
-        status: 'E'
-        };*/
+        
         const payload = {
           status: 'I',
           total_time: formattedTime.value,

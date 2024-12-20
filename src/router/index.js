@@ -174,6 +174,13 @@ router.beforeEach(async (to, from, next) => {
       return
 
     }
+    
+    if((to.name == "game" || to.name == "multiplayerGames" || to.name == "gameMode"  ) && (storeAuth.isAdmin)){
+      next({name: 'adminTab'})
+      return
+
+    }
+    
   
     if(from.name == "multiplayerGames"){
       storeGames.leaveTabMultiplayerGames()
