@@ -169,7 +169,7 @@ router.beforeEach(async (to, from, next) => {
 
     }
     
-    if((to.name == "game" || to.name == "multiplayerGames" || to.name == "gameMode"  ) && (storeAuth.isAdmin)){
+    if((to.name == "game" || to.name == "multiplayerGames" || to.name == "gameMode"  ) && (storeAuth.isAdmin())){
       next({name: 'adminTab'})
       return
 
