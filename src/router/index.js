@@ -3,7 +3,6 @@ import Login from '@/components/auth/Login.vue'
 import { useAuthStore } from '@/stores/auth'
 import Game from '@/components/Game.vue'
 import Transactions from '@/components/transactions/Transactions.vue'
-import WebSocket from '@/components/WebSocketTester.vue'
 import Profile from '@/components/Profile.vue'
 import Home from '@/components/Home.vue'
 import GameHistory from '@/components/gameHistory/GameHistory.vue'
@@ -44,11 +43,6 @@ const router = createRouter({
       path: '/game',
       name: 'game',
       component: Game,
-    },
-    {
-      path: '/ws',
-      name: 'websocket',
-      component: WebSocket,
     },
     {
       path: '/me',
@@ -198,6 +192,16 @@ router.beforeEach(async (to, from, next) => {
     // all other routes are accessible to everyone, including anonymous users
 
     if(to.name == "adminTab" && storeAuth.userType != "A"){
+      next({name: 'myprofile'})
+      return
+    }
+
+    if(to.name == "signup" && storeAuth.user){
+      next({name: 'myprofile'})
+      return
+    } 
+
+    if(to.name == "login" && storeAuth.user){
       next({name: 'myprofile'})
       return
     } 
