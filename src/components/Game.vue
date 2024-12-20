@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed, watch, onBeforeMount, onMounted } from 'vue'
+import { ref, computed, watch, onBeforeMount, onMounted, onBeforeUnmount } from 'vue'
 import Card from './Card.vue'
 import { inject } from 'vue' 
 import { useRoute, useRouter } from 'vue-router'
@@ -227,7 +227,7 @@ watch(gameWon, (newValue, oldValue) => {
     
   }
 });
-console.log(gameInterrupted.value)
+
 watch(gameInterrupted, (newValue, oldValue) => {
   if (newValue === true) {
     stop()
@@ -273,7 +273,27 @@ watch(gameInterrupted, (newValue, oldValue) => {
   }
 });
 
-
+onBeforeUnmount(() => {
+  if(game_id.value != null){
+    const response = axios.get(`/games/${game_id.value}`)
+    .then((response) => {
+      console.log(response.data.data)   
+      if(response.data.data.status == 'PL' ){
+        const payload = {
+          status: 'I',
+          total_time: formattedTime.value,
+          turns: total_turns.value == 1 ? total_turns.value : total_turns.value - 1
+        };
+        console.log(game_id.value)
+        const response = axios.put(`/games/${game_id.value}`, payload)
+        .then((response) => {
+            
+        });
+      }
+          
+    })
+  }
+})
 
 </script>
 
