@@ -35,7 +35,7 @@ gamesStore.loadGames()
               <TableRow>
                 <TableHead class="w-[150px] md:w-[200px] dark:text-white text-xs md:text-sm">Date</TableHead>
                 <TableHead class="dark:text-white text-xs md:text-sm">Status</TableHead>
-                <TableHead v-if="gamesStore.typeFilter == 'multiplayer' || authStore.isAdmin" class="dark:text-white text-xs md:text-sm">Creator</TableHead>
+                <TableHead v-if="gamesStore.typeFilter == 'multiplayer' || authStore.isAdmin()" class="dark:text-white text-xs md:text-sm">Creator</TableHead>
                 <TableHead v-if="gamesStore.typeFilter == 'multiplayer'" class="dark:text-white text-xs md:text-sm">Winner</TableHead>
                 <TableHead class="dark:text-white text-xs md:text-sm">Board</TableHead>
                 <TableHead class="dark:text-white text-xs md:text-sm">Total Time</TableHead>
