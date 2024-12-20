@@ -14,7 +14,7 @@ const storeAuth = useAuthStore()
       <CardTitle class="text-black dark:text-white">Memory Card Game</CardTitle>
       <CardDescription>The best memory card game ever!</CardDescription>
     </CardHeader>
-    <CardContent v-if="!storeAuth.isAdmin">
+    <CardContent v-if="!storeAuth.isAdmin || !storeAuth.user">
         <RouterLink v-if="storeAuth.user" :to="{ name: 'gameMode'}" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
             Play
         </RouterLink>
