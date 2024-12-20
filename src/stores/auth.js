@@ -231,13 +231,21 @@ export const useAuthStore = defineStore('auth', () => {
             }
         
             try {
-                const response = await axios.post('/users', payload, {
-                    headers: {
-                        'Content-Type': 'application/json'
-                    }
-                })
+                let response = null;
                 if(credentials.type === 'P'){
+                     response = await axios.post('/users', payload, {
+                        headers: {
+                            'Content-Type': 'application/json'
+                        }
+                    })
+                
                     router.push({ name: 'login' })
+                }else{
+                    response = await axios.post('/users/admin', payload, {
+                        headers: {
+                            'Content-Type': 'application/json'
+                        }
+                    })
                 }
                 toast({
                     description: 'User has been created correctly!',

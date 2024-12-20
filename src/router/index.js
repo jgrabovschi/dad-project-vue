@@ -193,6 +193,16 @@ router.beforeEach(async (to, from, next) => {
     if(to.name == "adminTab" && storeAuth.userType != "A"){
       next({name: 'myprofile'})
       return
+    }
+
+    if(to.name == "signup" && storeAuth.user){
+      next({name: 'myprofile'})
+      return
+    } 
+
+    if(to.name == "login" && storeAuth.user){
+      next({name: 'myprofile'})
+      return
     } 
     
     if(to.name == "transactions" && (storeAuth.user == null)){
