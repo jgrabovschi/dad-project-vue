@@ -21,7 +21,7 @@ gamesStore.loadGames()
       <CardHeader class="px-4">
         <CardTitle class="text-lg md:text-xl text-black dark:text-white">Game History</CardTitle>
         <CardDescription class="text-sm md:text-base">Use the filters and click on each game to see the scoreboards.
-          On the multiplayer games you can hover over the icon on the right to see the players and their moves. 
+          On the multiplayer games you can hover over the icon on the right to see the players and the number of pairs they discovered. 
         </CardDescription>
       </CardHeader>
       <CardContent>
