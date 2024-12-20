@@ -51,7 +51,7 @@ gamesStore.loadGames()
                     <TableCell class="dark:text-slate-300 text-xs md:text-sm">
                         {{ game.status == 'E' ? 'Ended' : game.status == 'PE' ? 'Pending' : game.status == 'I' ? 'Interrupted' : 'In Progress' }}
                     </TableCell>
-                    <TableCell v-if="game.type == 'M' || authStore.isAdmin" class="dark:text-slate-300 text-xs md:text-sm">
+                    <TableCell v-if="game.type == 'M' || authStore.isAdmin()" class="dark:text-slate-300 text-xs md:text-sm">
                       {{ game.created ?? 'No Creator'}}
                     </TableCell>
                     <TableCell v-if="game.type == 'M'" class="dark:text-slate-300 text-xs md:text-sm">
