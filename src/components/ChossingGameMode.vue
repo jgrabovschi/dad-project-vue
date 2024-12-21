@@ -31,15 +31,11 @@ const clickMulti = () =>{
 }
 
 const startGame = (board) =>{
-    //router.push({ name: 'game', params: { username: 'erina' } })
+    
     isLoading.value = true
     if(storeAuth.user == null){
         router.push({ name: 'game'})
     } else if(singlePlayerChosen.value){
-        /*
-        'created_user_id' => 'required|integer|exists:users,id',
-        'type' => 'required|string|in:S,M',
-        'board_id' => 'required|integer|exists:users,id',*/
 
         try {
             const payload = {
@@ -56,10 +52,6 @@ const startGame = (board) =>{
                 router.push({ name: 'game', query: {game_id: response.data.data.id, 
                                                     board_cols: board.board_cols, 
                                                     board_rows: board.board_rows}})
-                /* fazer aqui o depois
-                
-                isLoading.value = false
-                return response*/
             });
 
         } catch (e) {

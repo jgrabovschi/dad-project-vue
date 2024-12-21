@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed, watch } from 'vue'
+import { ref, computed, watch, onMounted } from 'vue'
 import Card from '@/components/Card.vue'
 import { inject } from 'vue' 
 import { useRoute, useRouter } from 'vue-router'
@@ -121,6 +121,9 @@ const isMyTurn = computed(() => {
   
 });
 
+onMounted(() => {
+  storeAuth.getUserDataAfterUpdate()
+});
 
 watch(isMyTurn, (newValue, oldValue) => {
   if(newValue === true){

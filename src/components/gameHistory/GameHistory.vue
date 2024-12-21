@@ -21,7 +21,7 @@ gamesStore.loadGames()
       <CardHeader class="px-4">
         <CardTitle class="text-lg md:text-xl text-black dark:text-white">Game History</CardTitle>
         <CardDescription class="text-sm md:text-base">Use the filters and click on each game to see the scoreboards.
-          On the multiplayer games you can hover over the icon on the right to see the players and their moves. 
+          On the multiplayer games you can hover over the icon on the right to see the players and the number of pairs they discovered. 
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -35,7 +35,7 @@ gamesStore.loadGames()
               <TableRow>
                 <TableHead class="w-[150px] md:w-[200px] dark:text-white text-xs md:text-sm">Date</TableHead>
                 <TableHead class="dark:text-white text-xs md:text-sm">Status</TableHead>
-                <TableHead v-if="gamesStore.typeFilter == 'multiplayer' || authStore.isAdmin" class="dark:text-white text-xs md:text-sm">Creator</TableHead>
+                <TableHead v-if="gamesStore.typeFilter == 'multiplayer' || authStore.isAdmin()" class="dark:text-white text-xs md:text-sm">Creator</TableHead>
                 <TableHead v-if="gamesStore.typeFilter == 'multiplayer'" class="dark:text-white text-xs md:text-sm">Winner</TableHead>
                 <TableHead class="dark:text-white text-xs md:text-sm">Board</TableHead>
                 <TableHead class="dark:text-white text-xs md:text-sm">Total Time</TableHead>
@@ -51,7 +51,7 @@ gamesStore.loadGames()
                     <TableCell class="dark:text-slate-300 text-xs md:text-sm">
                         {{ game.status == 'E' ? 'Ended' : game.status == 'PE' ? 'Pending' : game.status == 'I' ? 'Interrupted' : 'In Progress' }}
                     </TableCell>
-                    <TableCell v-if="game.type == 'M' || authStore.isAdmin" class="dark:text-slate-300 text-xs md:text-sm">
+                    <TableCell v-if="game.type == 'M' || authStore.isAdmin()" class="dark:text-slate-300 text-xs md:text-sm">
                       {{ game.created ?? 'No Creator'}}
                     </TableCell>
                     <TableCell v-if="game.type == 'M'" class="dark:text-slate-300 text-xs md:text-sm">
