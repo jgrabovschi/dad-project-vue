@@ -149,6 +149,7 @@ const flipCard = (card) => {
     flippedPair.push(card)
     if (flippedPair.length === 2) {
         isMyTurn.value = false;
+        total_turns.value = total_turns.value + 1;
         if (flippedPair[0].pair_id === flippedPair[1].pair_id 
                 && flippedPair[0].id !== flippedPair[1].id) {
             pairsFound.value = pairsFound.value + 1;
