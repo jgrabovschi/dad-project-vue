@@ -388,7 +388,7 @@ export const useAuthStore = defineStore('auth', () => {
                 payload.password = password
             }
             
-            //console.log(payload);
+            
             try {
                 const response = await axios.put(`/users/${user.value.id}`, payload, {
                     headers: {

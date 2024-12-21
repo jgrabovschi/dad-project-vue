@@ -1,9 +1,8 @@
 <script setup>
-import { ref, computed, watch, onMounted } from 'vue'
+import { ref, computed, watch, onMounted, onBeforeUnmount } from 'vue'
 import Card from '@/components/Card.vue'
 import { inject } from 'vue' 
 import { useRoute, useRouter } from 'vue-router'
-import {  } from 'vue-router'
 import { Card as CardComponent } from '@/components/ui/card'
 import { useAuthStore } from '@/stores/auth'
 import { useErrorStore } from '@/stores/error'
@@ -31,7 +30,7 @@ const board_cols = ref(null);
 const board_rows = ref(null);
 */
 const lastMoveDone = ref(999);
-//STOPWATCH SHITTTTTTTTTTTTTTTTTTTTTTTTTTTTT
+//STOPWATCH 
 
 
 const startTime = ref(null); // When the stopwatch starts
@@ -65,7 +64,7 @@ const stop = () => {
   clearInterval(intervalId);
 };
 
-//STOP WATCH SHIT STOPS NOWWWWWWWWWWWWWWWWWWWWWWWWW
+//STOPwatch COde stops now
 
 
 const gameInterrupted = computed(() => {
@@ -102,10 +101,8 @@ const goToGamehistory = () =>{
 }
 
 start()
-console.log("gameboard aqui")
-console.log(props.game)
+
 const pairsFound = computed(() => {
-  //console.log(storeGames.playerNumberOfCurrentUser(props.game))
   if(storeGames.playerNumberOfCurrentUser(props.game) == 1){
     return props.game.pairsFoundPlayerOne;
   }
@@ -129,8 +126,7 @@ watch(isMyTurn, (newValue, oldValue) => {
   if(newValue === true){
     
     lastMoveDone.value = formattedTime.value
-    console.log(lastMoveDone.value)
-    console.log(props.game)
+    
   }else{
     lastMoveDone.value = 999
   }
@@ -139,16 +135,21 @@ watch(isMyTurn, (newValue, oldValue) => {
 watch(gameInterrupted, (newValue, oldValue) => {
   if(gameInterrupted.value == true){
     props.game.total_time = formattedTime.value;
-    console.log(props.game)
+    
     storeGames.userStoppedPlaying(props.game)
-    //codigo aqui para chamer no auth do multiplayer game do userStopplaying para avisar que parou de jogar
-    //tens mandar aqui um closeGame para o scoket
+    
   }
 });
 
 if(storeGames.playerNumberOfCurrentUser(props.game) == props.game.currentPlayer){
   lastMoveDone.value = formattedTime.value
 }
+
+onBeforeUnmount(() => {
+
+  storeAuth.getUserDataAfterUpdate()
+
+});
 
 </script>
 

@@ -82,7 +82,7 @@ const updateProfile = async () => {
 
 const updatePasswordConfirmed = () => {
   storeAuth.updateProfilePassword(newPassword.value)
-  //console.log(newPassword.value)
+  
 }
 
 const updateConfirmed = () => {

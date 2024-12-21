@@ -46,7 +46,7 @@ const startGame = (board) =>{
 
             const response = axios.post('/games', payload)
             .then((response) => {
-                console.log(response.data.data)
+                
                 isLoading.value = false
                 //fazer update das coins visualmente
                 router.push({ name: 'game', query: {game_id: response.data.data.id, 
@@ -55,7 +55,7 @@ const startGame = (board) =>{
             });
 
         } catch (e) {
-            //console.log(e);
+            
             isLoading.value = false
             storeError.setErrorMessages(e.response.data.message, e.response.data.errors, e.response.status, 'Getting Games Error!')
         }
@@ -63,7 +63,7 @@ const startGame = (board) =>{
       //multiplayershit here
       router.push({ name: 'multiplayerGames'})
     }
-    //console.log(board)
+    
 }
 
 const checkAvailbleBoards = (board) =>{

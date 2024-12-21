@@ -97,7 +97,6 @@ export const useMultiplayerGamesStore = defineStore('multiplayerGames', () => {
 
     const userStoppedPlaying = (game) => {
         storeError.resetMessages()
-        console.log("tou dentro do store")
         socket.emit('userStopppedPlaying', {gameId: game.id, type: 1}, (response) => {
             if (webSocketServerResponseHasError(response)) {
                 return
@@ -141,8 +140,7 @@ export const useMultiplayerGamesStore = defineStore('multiplayerGames', () => {
                 player2_pairs_discovered: game.pairsFoundPlayerTwo,
                 turns: game.turn
             })
-            //const updatedGameOnDB = APIresponse.data.data
-            //console.log('Game has ended and updated on the database: ', updatedGameOnDB)
+            
         }
         if( storeAuth.user.id == (game.gameStatus === 1 ? game.player1_id : (game.gameStatus === 2 ? game.player2_id : null))){
             toast({
@@ -214,7 +212,7 @@ export const useMultiplayerGamesStore = defineStore('multiplayerGames', () => {
                 turns: payload.game.turn
             })
             const updatedGameOnDB = APIresponse.data.data
-            console.log('Game has ened and updated on the database: ', updatedGameOnDB)
+            
         }
 
         removeGameFromList(payload.game)

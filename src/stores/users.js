@@ -34,44 +34,6 @@ export const useUsersStore = defineStore('admin', () => {
         }
 
         try {
-            /*
-            if(searchName.value == undefined || searchName.value == '') {
-                const response = await axios.get(`/users`+ '?page=' + currentPage.value)
-                users.value = response.data.data
-                pages.value = response.data.meta.last_page
-                currentPage.value = response.data.meta.current_page
-                totalItems.value = response.data.meta.total
-            }else{
-                console.log(searchName.value)
-                const response = await axios.get(`/users`+ '?page=' + currentPage.value + '&search=' + searchName.value)
-                users.value = response.data.data
-                pages.value = response.data.meta.last_page
-                currentPage.value = response.data.meta.current_page
-                totalItems.value = response.data.meta.total
-            }*/
-
-                /*
-                if(searchUserType.value == '' && searchName.value == '') {
-                    const response = await axios.get(`/users`+ '?page=' + currentPage.value)
-                    users.value = response.data.data
-                    pages.value = response.data.meta.last_page
-                    currentPage.value = response.data.meta.current_page
-                    totalItems.value = response.data.meta.total
-                }else if(searchName.value != '' && searchUserType.value == ''){
-                    console.log(searchName.value)
-                    const response = await axios.get(`/users`+ '?page=' + currentPage.value + '&search=' + searchName.value)
-                    users.value = response.data.data
-                    pages.value = response.data.meta.last_page
-                    currentPage.value = response.data.meta.current_page
-                    totalItems.value = response.data.meta.total
-                }else{
-                    console.log(searchName.value)
-                    const response = await axios.get(`/users`+ '?page=' + currentPage.value + '&search=' + searchName.value + '&type=' + searchUserType.value)
-                    users.value = response.data.data
-                    pages.value = response.data.meta.last_page
-                    currentPage.value = response.data.meta.current_page
-                    totalItems.value = response.data.meta.total
-                }*/
                 const response = await axios.get(`/users?${queryParams.toString()}`);
                 const { data, meta } = response.data;
             

@@ -32,7 +32,7 @@ onBeforeMount(() => {
     
     const response = axios.get(`/games/${game_id.value}`)
     .then((response) => {
-      console.log(response.data.data)   
+         
       if(response.data.data.status == 'E' || response.data.data.status == 'I'){
         gameAlert.value.open(
         goToGamemode,  
@@ -149,9 +149,6 @@ const flipCard = (card) => {
     flippedPair.push(card)
     if (flippedPair.length === 2) {
         isMyTurn.value = false;
-        total_turns.value =  total_turns.value + 1
-        console.log(flippedPair[0])
-        console.log(flippedPair[1])
         if (flippedPair[0].pair_id === flippedPair[1].pair_id 
                 && flippedPair[0].id !== flippedPair[1].id) {
             pairsFound.value = pairsFound.value + 1;
@@ -182,7 +179,7 @@ const goToGamemode = () =>{
 
 startGame(board_rows.value , board_cols.value)
 
-console.log(cardsImages.value)
+
 
 startStopwatch()
 
@@ -205,7 +202,7 @@ watch(gameWon, (newValue, oldValue) => {
           total_time: formattedTime.value,
           turns: total_turns.value == 1 ? total_turns.value : total_turns.value - 1
         };
-        console.log(game_id.value)
+        
         const response = axios.put(`/games/${game_id.value}`, payload)
         .then((response) => {
             //isto é um sleep
@@ -216,7 +213,7 @@ watch(gameWon, (newValue, oldValue) => {
         });
 
       } catch (e) {
-          console.log(e);
+          
           storeError.setErrorMessages(e.response.data.message, e.response.data.errors, e.response.status, 'Getting Games Error!')
       }
     }else{
@@ -248,7 +245,6 @@ watch(gameInterrupted, (newValue, oldValue) => {
           total_time: formattedTime.value,
           turns: total_turns.value == 1 ? total_turns.value : total_turns.value - 1
         };
-        console.log(game_id.value)
         const response = axios.put(`/games/${game_id.value}`, payload)
         .then((response) => {
             
@@ -261,7 +257,6 @@ watch(gameInterrupted, (newValue, oldValue) => {
         });
 
       } catch (e) {
-          console.log(e);
           storeError.setErrorMessages(e.response.data.message, e.response.data.errors, e.response.status, 'Getting Games Error!')
       }
     }else{
@@ -283,14 +278,13 @@ onBeforeUnmount(() => {
     })
     const response = axios.get(`/games/${game_id.value}`)
     .then((response) => {
-      console.log(response.data.data)   
+         
       if(response.data.data.status == 'PL' ){
         const payload = {
           status: 'I',
           total_time: formattedTime.value,
           turns: total_turns.value == 1 ? total_turns.value : total_turns.value - 1
         };
-        console.log(game_id.value)
         const response = axios.put(`/games/${game_id.value}`, payload)
         .then((response) => {
             

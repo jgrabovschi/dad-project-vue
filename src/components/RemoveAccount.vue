@@ -42,7 +42,6 @@ const removeAccount = async () => {
  `This action cannot be undone. This will permanently delete your profile, and you will lose all your data.`
   )
   
-  //console.log(newPassword.value)
 }
 
 const removeAccountConfirmed = async () => {
