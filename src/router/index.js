@@ -241,6 +241,17 @@ router.beforeEach(async (to, from, next) => {
       next({name: 'TransactionsByUser', params: { nickname: storeAuth.user.nickname }})
       return
     }
+    if(to.name == "purchaseOptions" && (storeAuth.userType == "A")) 
+    {
+      next({name: 'myprofile'})
+      return
+    }
+    if(to.name == "CardShop" && (storeAuth.userType == "A")) 
+    {
+      next({name: 'myprofile'})
+      return
+    }
+    
     next()
 
 })
