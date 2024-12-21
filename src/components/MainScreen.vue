@@ -33,8 +33,6 @@ watch (() => routing.route, () => {
                router.replace(currentRoute);
             });
          });
-         
-
     }
 })
 

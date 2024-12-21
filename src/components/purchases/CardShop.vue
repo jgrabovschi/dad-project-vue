@@ -67,22 +67,19 @@ const  changeEquipCardStatus = async (card) => {
 
     let is_registered = await storeAuth.updateUserCards(userCards.value)
     if(is_registered){
-      let data_retrieved =  await storeAuth.getUserDataAfterUpdate()
-      if(data_retrieved != false){
+      await storeAuth.getUserDataAfterUpdate().then(() =>{
         getUserCards()
-      }
+      })
     }
 }
 
 const registerCardPurchase = async () => {
   userCards.value.push(card)
-  const is_registered = await transactionsStore.registerCardPurchase(userCards.value, card)
-  if(is_registered){
-    let data_retrieved =  await storeAuth.getUserDataAfterUpdate()
-    if(data_retrieved){
+  await transactionsStore.registerCardPurchase(userCards.value, card).then(async () =>{
+    await storeAuth.getUserDataAfterUpdate().then(() =>{
       getUserCards()
-    }
-  }
+    })
+  })
 }
 
 getUserCards();
