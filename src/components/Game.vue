@@ -326,29 +326,28 @@ onBeforeUnmount(() => {
             </p>
           </div>
         </div>
-          <div class="flex items-center gap-2">
-              <!-- Iterate over rows -->
-              <div 
-                  v-for="cardsRow in cardsImages" 
-                  :key="cardsRow[0]?.id" 
-                  class="flex-col gap-2 "
-              >
-                  <!-- Iterate over cards in a row -->
-                  <div 
-                      v-for="card in cardsRow" 
-                      :key="card.id" 
-                      class="bg-white w-24 aspect-[3/4] dark:bg-gray-700 rounded p-1"
-                  >
-                      <Card 
-                          v-if="!card.matched" 
-                          :card="card" 
-                          @flip="flipCard" 
-                          :turn="isMyTurn"
-                      />
-                  </div>
-              </div>
-          </div>
       </div>
+        <div class="grid gap-4" :style="{ gridTemplateColumns: `repeat(${board_cols}, minmax(0, 1fr))` }">
+          <!-- Iterate over rows -->
+          <div 
+            v-for="cardsRow in cardsImages" 
+            :key="cardsRow[0]?.id" 
+            class="contents"
+          >
+            <!-- Iterate over cards in a row -->
+            <div 
+              v-for="card in cardsRow" 
+              :key="card.id" 
+              class="bg-white w-24 aspect-[3/4] dark:bg-gray-700 rounded p-1"
+            >
+              <Card 
+                v-if="!card.matched" 
+                :card="card" 
+                @flip="flipCard" 
+              />
+            </div>
+          </div>
+        </div>
     </CardComponent>
   </div>
 </template>

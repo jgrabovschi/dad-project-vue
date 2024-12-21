@@ -30,7 +30,7 @@ const clickMulti = () =>{
   router.push({ name: 'multiplayerGames'})
 }
 
-const startGame = (board) =>{
+const  startGame = async (board) =>{
     
     isLoading.value = true
     if(storeAuth.user == null){
@@ -44,15 +44,16 @@ const startGame = (board) =>{
             board_id: board.id,
             };
 
-            const response = axios.post('/games', payload)
-            .then((response) => {
-                
-                isLoading.value = false
-                //fazer update das coins visualmente
-                router.push({ name: 'game', query: {game_id: response.data.data.id, 
-                                                    board_cols: board.board_cols, 
-                                                    board_rows: board.board_rows}})
-            });
+            const response = await axios.post('/games', payload)
+            isLoading.value = false
+            //fazer update das coins visualmente
+            console.log(response)
+            if(response.request.status == 201){
+              router.push({ name: 'game', query: {game_id: response.data.data.id, 
+                                                board_cols: board.board_cols, 
+                                                board_rows: board.board_rows}})
+            }
+            
 
         } catch (e) {
             
