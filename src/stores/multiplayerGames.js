@@ -91,6 +91,7 @@ export const useMultiplayerGamesStore = defineStore('multiplayerGames', () => {
                 return
             }
             removeGameFromList(game)
+            storeAuth.getUserDataAfterUpdate()
         })
     }
 
@@ -101,7 +102,7 @@ export const useMultiplayerGamesStore = defineStore('multiplayerGames', () => {
             if (webSocketServerResponseHasError(response)) {
                 return
             }
-            
+            storeAuth.getUserDataAfterUpdate()
         })
     }
 

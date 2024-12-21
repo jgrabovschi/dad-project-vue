@@ -9,9 +9,10 @@ import { useMemoryGame } from '../composables/memoryGame.js'
 import { useAuthStore } from '@/stores/auth'
 import { useErrorStore } from '@/stores/error'
 import axios from 'axios';
-//import { useStopwatch } from 'vue-timer-hook';
+import { useToast } from '@/components/ui/toast/use-toast'
 
 
+const { toast } = useToast()
 const storeAuth = useAuthStore()
 const storeError = useErrorStore()
 
@@ -28,6 +29,7 @@ onBeforeMount(() => {
 
   
   if(game_id.value != null){
+    
     const response = axios.get(`/games/${game_id.value}`)
     .then((response) => {
       console.log(response.data.data)   
@@ -275,6 +277,10 @@ watch(gameInterrupted, (newValue, oldValue) => {
 
 onBeforeUnmount(() => {
   if(game_id.value != null){
+    toast({
+        title: 'Game Interrumpted',
+        description: `You left the game #${game_id.value}!`,
+    })
     const response = axios.get(`/games/${game_id.value}`)
     .then((response) => {
       console.log(response.data.data)   
