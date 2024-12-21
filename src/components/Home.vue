@@ -10,7 +10,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
       <CardTitle class="text-black dark:text-white">Memory Card Game</CardTitle>
       <CardDescription>The best memory card game ever!</CardDescription>
     </CardHeader>
-    <CardContent>
+    <CardContent class="w-96 flex flex-col items-center">
         <RouterLink :to="{ name: 'game'}" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
             Start Game
         </RouterLink>

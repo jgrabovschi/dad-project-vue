@@ -1,11 +1,11 @@
 <script setup>
     import { defineProps } from 'vue'
-
+    import { useAuthStore } from '@/stores/auth';
     const props = defineProps(['card'])
-
+    const storeAuth = useAuthStore()
     const emits = defineEmits(['flip'])
 
-    const backOfCard = '/cards/semFace.png'
+    const backOfCard = storeAuth.equippedCard
 
     const flip = () => {
         

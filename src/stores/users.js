@@ -21,8 +21,6 @@ export const useUsersStore = defineStore('admin', () => {
     const loadUsers = async () => {
         errorStore.resetMessages()
         isLoading.value = true
-        console.log(searchName.value)
-
         const queryParams = new URLSearchParams({
             page: currentPage.value,
         });

@@ -3,6 +3,7 @@ import Login from '@/components/auth/Login.vue'
 import { useAuthStore } from '@/stores/auth'
 import Game from '@/components/Game.vue'
 import Transactions from '@/components/transactions/Transactions.vue'
+import CardShop from '@/components/purchases/CardShop.vue'
 import WebSocket from '@/components/WebSocketTester.vue'
 import Profile from '@/components/Profile.vue'
 import Home from '@/components/Home.vue'
@@ -81,6 +82,11 @@ const router = createRouter({
       component: GameHistory,
     },
     {
+      path: '/shop',
+      name: 'CardShop',
+      component: CardShop
+    },
+    {
       path: '/signup',
       name: 'signup',
       component: Signup,
@@ -139,6 +145,11 @@ router.beforeEach(async (to, from, next) => {
     }
 
     if (to.name == "myprofile" && (!storeAuth.user)) {
+      next({ name: 'login' })
+      return
+    }
+
+    if (to.name == "CardShop" && (!storeAuth.user)) {
       next({ name: 'login' })
       return
     }

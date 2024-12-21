@@ -1,4 +1,4 @@
-import { ref, computed, inject } from 'vue'
+import { ref, computed, inject, watch } from 'vue'
 import { defineStore } from 'pinia'
 import axios from 'axios'
 import { useErrorStore } from '@/stores/error'
@@ -8,20 +8,22 @@ import { useToast } from '@/components/ui/toast/use-toast'
 import { useTransactionsStore } from '@/stores/transactions'
 
 
-
-
 export const useAuthStore = defineStore('auth', () => {
     const router = useRouter()
     const storeError = useErrorStore()
     const socket = inject('socket')
     const transactions = useTransactionsStore()
-
+    const equippedCard = ref('/cards/semFace.png')
     const { toast } = useToast()
     const user = ref(null)
     const token = ref('')
 
     const userName = computed(() => {
         return user.value ? user.value.name : ''
+    })
+
+    watch(user, () => {
+        getEquippedCard()
     })
 
     const userFirstLastName = computed(() => {
@@ -42,6 +44,33 @@ export const useAuthStore = defineStore('auth', () => {
     const userType = computed(() => {
         return user.value ? user.value.type : ''
     })
+
+    const cards = computed(() => {
+        return user.value ? user.value.custom : null
+    })
+
+    const getEquippedCard = () => {
+        if(user.value && user.value.custom){
+                let has_one_equipped = false
+                let cards_user 
+                try{
+                cards_user = JSON.parse(user.value.custom)
+                }catch(e){
+                    return
+                }
+                cards_user.forEach(card => {
+                    if(card.equiped){
+                        equippedCard.value = card.image
+                        has_one_equipped = true
+                    }
+                })
+                if(!has_one_equipped){
+                    equippedCard.value = '/cards/semFace.png'
+                }
+        }else{
+            equippedCard.value = '/cards/semFace.png'
+        }
+    } 
 
     const userGender = computed(() => {
         return user.value ? user.value.gender : ''
@@ -247,12 +276,12 @@ export const useAuthStore = defineStore('auth', () => {
                 if (e.response) {
                     storeError.setErrorMessages(e.response.data.message, e.response.data.errors, e.response.status, 'Signup Error!')
                 } else {
-                    console.log(e)
                     storeError.setErrorMessages('An unexpected error occurred.')
                 }
                 return false
             }
         }
+        
 
         /*
         const updateProfile = async (credentials) => {
@@ -317,15 +346,12 @@ export const useAuthStore = defineStore('auth', () => {
                 payload.photo_filename = credentials.photo_filename // Base64 encoded image
             }
             
-            console.log(payload );
             try {
                 const response = await axios.put(`/users/${user.value.id}`, payload, {
                     headers: {
                         'Content-Type': 'application/json'
                     }
                 })
-
-                console.log(response.data);
                 await getUserDataAfterUpdate();
         
                 router.push({ name: 'myprofile' });
@@ -337,7 +363,6 @@ export const useAuthStore = defineStore('auth', () => {
                 
                 return response.data
             } catch (e) {
-                console.log(e);
                 if (e.response) {
                     storeError.setErrorMessages(e.response.data.message, e.response.data.errors, e.response.status, 'Update Profile Error!')
                 } else {
@@ -363,7 +388,6 @@ export const useAuthStore = defineStore('auth', () => {
                     }
                 })
 
-                console.log(response.data);
                 await getUserDataAfterUpdate();
         
                 router.push({ name: 'myprofile' });
@@ -374,7 +398,6 @@ export const useAuthStore = defineStore('auth', () => {
                 
                 return response.data
             } catch (e) {
-                console.log(e);
                 if (e.response) {
                     storeError.setErrorMessages(e.response.data.message, e.response.data.errors, e.response.status, 'Update Profile Error!')
                 } else {
@@ -428,10 +451,25 @@ export const useAuthStore = defineStore('auth', () => {
             return (firstName + ' ' + lastName).trim()
         }
     
-
+        const updateUserCards = async (cards) => {
+            let custom = {
+             "data": cards
+            }
+            storeError.resetMessages()
+            try {
+                let response = await axios.put(`/users/${user.value.id}/card`, custom, {
+                    headers: { 'Content-Type': 'application/json' },
+                })
+                user.value = response.data.data
+                return true
+            } catch (e) {
+                storeError.setErrorMessages(e.response.data.message, e.response.data.errors, e.response.status, 'Error registering card!')
+                return false
+            }
+        }
     return {
-        user, userName, userFirstLastName, userEmail, userType, userGender, userPhotoUrl, gamesWon, nickname, balance,
+        user, userName, equippedCard, userFirstLastName, userEmail, cards, userType, userGender, userPhotoUrl, gamesWon, nickname, balance,
         login, logout, restoreToken, canUpdateDeleteProject, signup, updateProfile, validatePassword, updateProfilePassword, removeAccount, canDeleteOwnAccount, isAdmin,
-        getFirstLastName, getUserDataAfterUpdate
+        getFirstLastName, getUserDataAfterUpdate, updateUserCards
     }
 })

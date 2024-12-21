@@ -58,7 +58,6 @@ export const useTransactionsStore = defineStore('transactions', () => {
         }
 
         try {
-
                 response = await axios.get(apiUrl + '?page=' + currentPage.value)
                 transactions.value = response.data.data
                 pages.value = response.data.meta.last_page
@@ -87,7 +86,7 @@ export const useTransactionsStore = defineStore('transactions', () => {
     }    
 
     const insertTransaction = async (transaction) =>{
-
+        storeError.resetMessages();
         const external_verification_url = "https://dad-202425-payments-api.vercel.app/api/debit"
         const external_verification_payload = {
             type: transaction['payment_type'],
@@ -123,9 +122,36 @@ export const useTransactionsStore = defineStore('transactions', () => {
             const errorDetails = e.response?.data?.errors || [];
             const errorStatus = e.response?.status || 500;
         
-            storeError.setErrorMessages(errorMessage, errorDetails, errorStatus, 'Error buying the product!');
+            storeError.setErrorMessages(errorMessage, errorDetails, errorStatus, 'Error buying the product! You will not be charged.');
           }
         }
+
+    const registerCardPurchase = async (userCards, card) => {
+        storeError.resetMessages();
+        const transaction = {
+            user_id: storeAuth.user.id,
+            brain_coins: -card.price,
+            type: 'I'
+        }    
+        try{
+            await axios.post('/transactions', transaction).then(response => {   
+                let response_cards = storeAuth.updateUserCards(userCards)
+                if(response_cards){
+                    toast({
+                        title: 'Purchase Completed',
+                        description: `Your product has been bought successfully. Please refresh the page if the credits are not appearing`,
+                        variant: "destructive",
+                        class: "group border-green-500 bg-green-500 text-neutral-50",
+                      })
+                }
+            })
+            return true
+        }catch(e){
+            const errorMessage = e.response?.data?.message || 'You do not have enough credits to buy this card';
+            storeError.setErrorMessages(errorMessage, e.response.data.errors, e.response.status, 'Error Buying the Card. You will not be charged.')
+            return false
+        }
+    }
 
     return{
         filter,
@@ -142,6 +168,7 @@ export const useTransactionsStore = defineStore('transactions', () => {
         lastPage,
         resetValues,
         resetPaginator,
-        insertTransaction
+        insertTransaction,
+        registerCardPurchase,
     }
 });
